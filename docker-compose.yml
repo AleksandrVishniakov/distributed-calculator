@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  app:
+    image: dc-api-gateway:local
+    container_name: dc-api-gateway-app
+    environment:
+      HTTP_PORT: 8000
+    ports:
+      - "8000:8000"
+    depends_on:
+      - goose
+
+  postgres:
+    image: postgres:14-alpine
+    container_name: distributed-calculator-psql
+    ports:
+      - "5002:5432"
+    environment:
+      - POSTGRES_DB=distributed-calculator-db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 3s
+      timeout: 15s
+      retries: 5
+
+  goose:
+    image: artsafin/goose-migrations:latest
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./api-gateway/db/migrations:/db/migrations
+    environment:
+      GOOSE_DRIVER: postgres
+      GOOSE_DBSTRING: "postgres://postgres:${DB_PASSWORD}@postgres:5432/distributed-calculator-db?sslmode=disable"
+    command: ["-dir", "/db/migrations", "up"]
