@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="952c2938-7398-4fa9-a778-45e0fecb3c12" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/docs.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/HelpTOC.json" beforeDir="false" afterPath="$PROJECT_DIR$/HelpTOC.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Map.jhm" beforeDir="false" afterPath="$PROJECT_DIR$/Map.jhm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Writerside/c.list" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Writerside/hi.tree" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Writerside/images/completion_procedure.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Writerside/images/completion_procedure_dark.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Writerside/images/convert_table_to_xml.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Writerside/images/convert_table_to_xml_dark.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Writerside/images/new_topic_options.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Writerside/images/new_topic_options_dark.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Writerside/topics/Database-structure.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Writerside/topics/Default-topic.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Writerside/topics/Project-overview.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Writerside/v.list" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Writerside/writerside.cfg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/config.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/current.help.version" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/database-structure.html" beforeDir="false" afterPath="$PROJECT_DIR$/database-structure.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/default-topic.html" beforeDir="false" afterPath="$PROJECT_DIR$/default-topic.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/icon-192.png" beforeDir="false" afterPath="$PROJECT_DIR$/icon-192.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/icon-512.png" beforeDir="false" afterPath="$PROJECT_DIR$/icon-512.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/completion_procedure.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/completion_procedure.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/completion_procedure_dark.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/completion_procedure_dark.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/convert_table_to_xml.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/convert_table_to_xml.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/convert_table_to_xml_dark.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/convert_table_to_xml_dark.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/new_topic_options.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/new_topic_options.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/new_topic_options_dark.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/new_topic_options_dark.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project-overview.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/site.webmanifest" beforeDir="false" afterPath="$PROJECT_DIR$/site.webmanifest" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="InstanceColorv3">
+    <option name="map">
+      <map>
+        <entry key="$PROJECT_DIR$/Writerside/hi.tree">
+          <value>
+            <ColorState>
+              <option name="customOrder" value="1" />
+              <option name="first">
+                <RgbState>
+                  <option name="blue" value="60" />
+                  <option name="darkBlue" value="60" />
+                  <option name="darkGreen" value="68" />
+                  <option name="darkRed" value="206" />
+                  <option name="green" value="68" />
+                  <option name="red" value="206" />
+                </RgbState>
+              </option>
+              <option name="second">
+                <RgbState>
+                  <option name="blue" value="65" />
+                  <option name="darkBlue" value="65" />
+                  <option name="darkGreen" value="126" />
+                  <option name="darkRed" value="231" />
+                  <option name="green" value="126" />
+                  <option name="red" value="231" />
+                </RgbState>
+              </option>
+            </ColorState>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
+  <component name="ProjectId" id="2cGfIQI38cVjYapHA6r6T1gcp7E" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "Writerside.Web Archive (hi).executor": "Run",
+    "git-widget-placeholder": "Merging main",
+    "last_opened_file_path": "C:/Users/AV/go/src/distributed-calculator/docs/Writerside/topics"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\AV\go\src\distributed-calculator\docs\Writerside\topics" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="Web Archive (hi)" type="StardustRunConfiguration" factoryName="save-as-zip">
+      <option name="folderPath" value="$PROJECT_DIR$" />
+      <option name="instanceId" value="hi" />
+      <option name="instanceName" value="Help Instance" />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+</project>
