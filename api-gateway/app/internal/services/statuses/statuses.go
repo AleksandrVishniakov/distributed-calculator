@@ -3,6 +3,9 @@ package statuses
 type Status int
 
 const (
-	InProgress Status = iota
+	Created Status = iota
+	Enqueued
+	Calculating
 	Finished
+	Failed
 )

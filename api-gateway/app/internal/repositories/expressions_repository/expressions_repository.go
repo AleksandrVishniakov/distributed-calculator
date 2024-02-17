@@ -15,6 +15,7 @@ type ExpressionsRepository interface {
 	FindById(id int) (*ExpressionEntity, error)
 	FindByIdempotencyKey(key string, expression string) (int, error)
 	Create(expressions string, status int, key string) (int, error)
+	SetStatus(id int, status int) error
 }
 
 type expressionsRepository struct {
@@ -94,12 +95,10 @@ func (e *expressionsRepository) FindById(id int) (*ExpressionEntity, error) {
 
 func (e *expressionsRepository) Update(entity *ExpressionEntity) error {
 	_, err := e.db.Exec(
-		"UPDATE expressions SET expression=$1, status=$2, result=$3, finished_at=$4, idempotency_key=$5 WHERE id=$6",
-		entity.Expression,
+		"UPDATE expressions SET status=$1, result=$2, finished_at=$3 WHERE id=$4",
 		entity.Status,
 		entity.Result,
 		entity.FinishedAt,
-		entity.IdempotencyKey,
 		entity.Id,
 	)
 
@@ -107,7 +106,7 @@ func (e *expressionsRepository) Update(entity *ExpressionEntity) error {
 }
 
 func (e *expressionsRepository) FindAll() ([]*ExpressionEntity, error) {
-	rows, err := e.db.Query("SELECT * FROM expressions")
+	rows, err := e.db.Query("SELECT * FROM expressions ORDER BY created_at DESC")
 	if err != nil {
 		return []*ExpressionEntity{}, err
 	}
@@ -135,4 +134,14 @@ func (e *expressionsRepository) FindAll() ([]*ExpressionEntity, error) {
 	}
 
 	return expressions, nil
+}
+
+func (e *expressionsRepository) SetStatus(id int, status int) error {
+	_, err := e.db.Exec(
+		"UPDATE expressions SET status=$1 WHERE id=$2 and status < $1",
+		status,
+		id,
+	)
+
+	return err
 }

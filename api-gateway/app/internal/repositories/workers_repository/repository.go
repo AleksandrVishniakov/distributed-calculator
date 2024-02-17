@@ -2,13 +2,15 @@ package workers_repository
 
 import (
 	"database/sql"
+	"errors"
 	"time"
 )
 
 type WorkersRepository interface {
-	Register(entity *WorkerEntity) error
+	Register(entity *WorkerEntity) (bool, error)
 	FindAll() ([]*WorkerEntity, error)
 	DeleteExpiredWorkers(deadline time.Time) ([]int, error)
+	FindFreeWorker() (*FreeWorkerEntity, error)
 }
 
 type workersRepository struct {
@@ -19,19 +21,23 @@ func NewWorkersRepository(db *sql.DB) WorkersRepository {
 	return &workersRepository{db: db}
 }
 
-func (w *workersRepository) Register(entity *WorkerEntity) error {
-	_, err := w.db.Exec(
-		"INSERT INTO workers (id, url, executors) VALUES ($1, $2, $3) ON CONFLICT (id) DO UPDATE SET url = $2, executors = $3, last_modified = NOW()",
+func (w *workersRepository) Register(entity *WorkerEntity) (bool, error) {
+	row := w.db.QueryRow(
+		"INSERT INTO workers (id, url, executors) VALUES ($1, $2, $3) ON CONFLICT (id) DO UPDATE SET url = $2, executors = $3, last_modified = NOW() returning xmax::text::int > 0 as is_updated",
 		entity.Id,
 		entity.Url,
 		entity.Executors,
 	)
 
-	return err
+	var exists bool
+
+	err := row.Scan(&exists)
+
+	return exists, err
 }
 
 func (w *workersRepository) FindAll() ([]*WorkerEntity, error) {
-	rows, err := w.db.Query("SELECT * FROM workers")
+	rows, err := w.db.Query("SELECT * FROM workers ORDER BY id")
 	if err != nil {
 		return []*WorkerEntity{}, err
 	}
@@ -82,4 +88,26 @@ func (w *workersRepository) DeleteExpiredWorkers(deadline time.Time) ([]int, err
 	}
 
 	return ids, nil
+}
+
+func (w *workersRepository) FindFreeWorker() (*FreeWorkerEntity, error) {
+	row := w.db.QueryRow(
+		`select
+		w.id, w.url, w.executors - (select count(*) from expressions_tree t where t.worker_id = w.id and t.status <> 3 and t.status <> 4) as free_executors
+		from workers w order by free_executors desc, w.id asc limit 1`,
+	)
+
+	var worker = &FreeWorkerEntity{}
+
+	err := row.Scan(&worker.Id, &worker.Url, &worker.Executors)
+
+	if errors.Is(err, sql.ErrNoRows) {
+		return nil, nil
+	}
+
+	if err != nil {
+		return nil, err
+	}
+
+	return worker, nil
 }

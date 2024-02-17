@@ -7,9 +7,10 @@ import (
 )
 
 type WorkerStorage interface {
-	Register(worker *dto.WorkerRequestDTO) error
+	Register(worker *dto.WorkerRequestDTO) (bool, error)
 	FindAll() ([]*dto.WorkerResponseDTO, error)
 	DeleteExpiredWorkers(deadline time.Time) ([]int, error)
+	FindFreeWorker() (*dto.WorkerResponseDTO, error)
 }
 
 type workerStorage struct {
@@ -20,7 +21,7 @@ func NewWorkerStorage(repository workers_repository.WorkersRepository) WorkerSto
 	return &workerStorage{repository: repository}
 }
 
-func (w *workerStorage) Register(worker *dto.WorkerRequestDTO) error {
+func (w *workerStorage) Register(worker *dto.WorkerRequestDTO) (bool, error) {
 	return w.repository.Register(&workers_repository.WorkerEntity{
 		Id:        worker.Id,
 		Url:       worker.Url,
@@ -54,4 +55,25 @@ func (w *workerStorage) FindAll() ([]*dto.WorkerResponseDTO, error) {
 
 func (w *workerStorage) DeleteExpiredWorkers(deadline time.Time) ([]int, error) {
 	return w.repository.DeleteExpiredWorkers(deadline)
+}
+
+func (w *workerStorage) FindFreeWorker() (*dto.WorkerResponseDTO, error) {
+	worker, err := w.repository.FindFreeWorker()
+	if err != nil {
+		return nil, err
+	}
+
+	if worker == nil {
+		return nil, nil
+	}
+
+	if worker.Executors <= 0 {
+		return nil, nil
+	}
+
+	return &dto.WorkerResponseDTO{
+		Id:        worker.Id,
+		Url:       worker.Url,
+		Executors: worker.Executors,
+	}, nil
 }

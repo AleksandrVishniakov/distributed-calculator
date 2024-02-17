@@ -1,6 +1,10 @@
 package dto
 
-import "time"
+import (
+	"github.com/AleksandrVishniakov/distributed-calculator/api-gateway/app/internal/services/expression/expr_tokens"
+	"github.com/AleksandrVishniakov/distributed-calculator/api-gateway/app/internal/services/statuses"
+	"time"
+)
 
 type CalculationRequestDTO struct {
 	Expression     string `json:"expression"`
@@ -25,11 +29,9 @@ type LimitOffsetRequest struct {
 	Offset int `json:"offset"`
 }
 
-type OperationsSetup struct {
-	AddTime      int64 `json:"addTime"`
-	SubtractTime int64 `json:"subtractTime"`
-	MultiplyTime int64 `json:"multiplyTime"`
-	DivideTime   int64 `json:"divideTime"`
+type OperationDTO struct {
+	OperationType expr_tokens.OperationType `json:"operationType"`
+	DurationMS    int                       `json:"durationMS"`
 }
 
 type WorkerRequestDTO struct {
@@ -43,4 +45,26 @@ type WorkerResponseDTO struct {
 	Url          string    `json:"url"`
 	Executors    int       `json:"executors"`
 	LastModified time.Time `json:"lastModified"`
+}
+
+type CalculationResultDTO struct {
+	Result float64 `json:"result"`
+}
+
+type ExpressionNodeDTO struct {
+	Id            int             `json:"id"`
+	ParentId      int             `json:"parentId"`
+	ExpressionId  int             `json:"expressionId"`
+	Type          int             `json:"type"`
+	OperationType int             `json:"operationType"`
+	Status        statuses.Status `json:"status"`
+	Result        float64         `json:"result"`
+	WorkerId      int             `json:"workerId"`
+}
+
+type TaskDTO struct {
+	LeftResult    float64         `json:"leftResult"`
+	OperationType int             `json:"operationType"`
+	RightResult   float64         `json:"rightResult"`
+	Status        statuses.Status `json:"status"`
 }

@@ -1,15 +1,16 @@
 version: '3'
 
 services:
-  app:
+  api-gateway:
     image: dc-api-gateway:local
-    container_name: dc-api-gateway-app
+    container_name: dc-api-gateway
     environment:
       HTTP_PORT: 8000
     ports:
       - "8000:8000"
     depends_on:
-      - goose
+      goose:
+        condition: service_completed_successfully
 
   postgres:
     image: postgres:14-alpine
@@ -39,3 +40,44 @@ services:
       GOOSE_DRIVER: postgres
       GOOSE_DBSTRING: "postgres://postgres:${DB_PASSWORD}@postgres:5432/distributed-calculator-db?sslmode=disable"
     command: ["-dir", "/db/migrations", "up"]
+
+  daemon1:
+    depends_on:
+      - api-gateway
+    image: dc-daemon:local
+    container_name: dc-daemon-1
+    environment:
+      HTTP_PORT: 8001
+      DAEMON_ID: 1
+      DAEMON_HOST: "http://daemon1:8001" 
+      ORCHESTRATOR_HOST: "http://api-gateway:8000"
+      PING_PERIOD_MS: 25000
+      MAX_GOROUTINES: 1
+    ports:
+      - "8001:8001"
+
+  daemon2:
+    depends_on:
+      - api-gateway
+    image: dc-daemon:local
+    container_name: dc-daemon-2
+    environment:
+      HTTP_PORT: 8002
+      DAEMON_ID: 2
+      DAEMON_HOST: "http://daemon2:8002" 
+      ORCHESTRATOR_HOST: "http://api-gateway:8000"
+      PING_PERIOD_MS: 25000
+      MAX_GOROUTINES: 5
+    ports:
+      - "8002:8002"
+
+  page-parser:
+    depends_on:
+      - api-gateway
+    image: dc-page-parser:local
+    container_name: dc-page-parser
+    environment:
+      HTTP_PORT: "8080"
+      ORCHESTRATOR_HOST: "http://localhost:8000"
+    ports:
+      - "8080:8080"

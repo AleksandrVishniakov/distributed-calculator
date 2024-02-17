@@ -8,4 +8,12 @@ type ExpressionTreeNodeEntity struct {
 	OperationType int
 	Status        int
 	Result        float64
+	WorkerId      int
+}
+
+type TaskEntity struct {
+	LeftResult    float64
+	OperationType int
+	RightResult   float64
+	Status        int
 }

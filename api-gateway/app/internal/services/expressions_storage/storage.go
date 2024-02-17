@@ -6,6 +6,7 @@ import (
 	"github.com/AleksandrVishniakov/distributed-calculator/api-gateway/app/internal/repositories/expressions_repository"
 	"github.com/AleksandrVishniakov/distributed-calculator/api-gateway/app/internal/services/expression"
 	"github.com/AleksandrVishniakov/distributed-calculator/api-gateway/app/internal/services/statuses"
+	"time"
 )
 
 var (
@@ -17,6 +18,9 @@ type ExpressionStorage interface {
 	Create(expressions expression.Expression, key string) (int, error)
 	FindById(id int) (*dto.ExpressionResponseDTO, error)
 	FindAll() ([]*dto.ExpressionResponseDTO, error)
+	SaveResult(id int, result float64) error
+	MarkAsCalculating(id int) error
+	MarkAsFailed(id int) error
 }
 
 type expressionStorage struct {
@@ -32,7 +36,7 @@ func (e *expressionStorage) FindByIdempotencyKey(key string, expression expressi
 }
 
 func (e *expressionStorage) Create(expr expression.Expression, key string) (int, error) {
-	return e.repository.Create(string(expr), int(statuses.InProgress), key)
+	return e.repository.Create(string(expr), int(statuses.Created), key)
 }
 
 func (e *expressionStorage) FindById(id int) (*dto.ExpressionResponseDTO, error) {
@@ -62,4 +66,21 @@ func (e *expressionStorage) FindAll() ([]*dto.ExpressionResponseDTO, error) {
 	}
 
 	return expressions, nil
+}
+
+func (e *expressionStorage) SaveResult(id int, result float64) error {
+	return e.repository.Update(&expressions_repository.ExpressionEntity{
+		Id:         id,
+		Result:     result,
+		Status:     int(statuses.Finished),
+		FinishedAt: time.Now(),
+	})
+}
+
+func (e *expressionStorage) MarkAsCalculating(id int) error {
+	return e.repository.SetStatus(id, int(statuses.Calculating))
+}
+
+func (e *expressionStorage) MarkAsFailed(id int) error {
+	return e.repository.SetStatus(id, int(statuses.Failed))
 }
