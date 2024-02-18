@@ -14,8 +14,6 @@ FROM alpine
 WORKDIR /go
 
 COPY configs ./configs/
-COPY ./.env .
-
 COPY --from=build /go/bin/app /bin/app
 
 CMD ["app"]
