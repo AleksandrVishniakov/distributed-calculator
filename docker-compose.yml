@@ -22,7 +22,7 @@ services:
     environment:
       - POSTGRES_DB=distributed-calculator-db
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_PASSWORD="admin"
     volumes:
       - ./data:/var/lib/postgresql/data
     healthcheck:
@@ -40,7 +40,7 @@ services:
       - ./api-gateway/db/migrations:/db/migrations
     environment:
       GOOSE_DRIVER: postgres
-      GOOSE_DBSTRING: "postgres://postgres:${DB_PASSWORD}@postgres:5432/distributed-calculator-db?sslmode=disable"
+      GOOSE_DBSTRING: "postgres://postgres:admin@postgres:5432/distributed-calculator-db?sslmode=disable"
     command: ["-dir", "/db/migrations", "up"]
 
   daemon1:
