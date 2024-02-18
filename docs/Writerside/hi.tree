@@ -3,7 +3,7 @@
         SYSTEM "https://resources.jetbrains.com/writerside/1.0/product-profile.dtd">
 
 <instance-profile id="hi"
-                 name="Распределённый калькулятор. Документация"
+                 name="Распределённый калькулятор"
                  start-page="Project-overview.md">
 
     <toc-element topic="Project-overview.md"/>
