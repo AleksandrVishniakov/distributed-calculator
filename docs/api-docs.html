@@ -1,5 +1,5 @@
 <!DOCTYPE html SYSTEM "about:legacy-compat">
-<html lang="en-US" data-colors-preset="contrast" data-primary-color="#307FFF"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta charset="UTF-8"><meta name="robots" content="noindex"><meta name="built-on" content="2024-02-18T21:52:37.6201979"><title>Документация API | Распределённый калькулятор</title><script type="application/json" id="virtual-toc-data">[{"id":"b67b36d8_3","level":0,"title":"Работа с выражениями","anchor":"#b67b36d8_3"},{"id":"b67b36d8_22","level":0,"title":"Работа с операторами","anchor":"#b67b36d8_22"},{"id":"b67b36d8_34","level":0,"title":"Работа с агентами","anchor":"#b67b36d8_34"},{"id":"b67b36d8_50","level":0,"title":"Работа с задачами","anchor":"#b67b36d8_50"},{"id":"api","level":0,"title":"Ошибки API","anchor":"#api"}]</script><script type="application/json" id="topic-shortcuts"></script><link href="https://resources.jetbrains.com/writerside/apidoc/6.6.6-b205/app.css" rel="stylesheet"><link rel="apple-touch-icon" sizes="180x180" href="https://jetbrains.com/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="https://jetbrains.com/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="https://jetbrains.com/favicon-16x16.png"><link rel="manifest" href="site.webmanifest"><meta name="msapplication-TileColor" content="#000000"><meta name="msapplication-TileImage" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-144x144.png"><meta name="msapplication-square70x70logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-70x70.png"><meta name="msapplication-square150x150logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-150x150.png"><meta name="msapplication-wide310x150logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-310x150.png"><meta name="msapplication-square310x310logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-310x310.png"><meta name="image" content=""><!-- Open Graph --><meta property="og:title" content="Документация API | Распределённый калькулятор"><meta property="og:description" content=""><meta property="og:image" content=""><meta property="og:site_name" content="Распределённый калькулятор Help"><meta property="og:type" content="website"><meta property="og:locale" content="en_US"><meta property="og:url" content="api-docs.html"><!-- End Open Graph --><!-- Twitter Card --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:site" content=""><meta name="twitter:title" content="Документация API | Распределённый калькулятор"><meta name="twitter:description" content=""><meta name="twitter:creator" content=""><meta name="twitter:image:src" content=""><!-- End Twitter Card --><!-- Schema.org WebPage --><script type="application/ld+json">{
+<html lang="en-US" data-colors-preset="contrast" data-primary-color="#307FFF"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta charset="UTF-8"><meta name="robots" content="noindex"><meta name="built-on" content="2024-02-18T21:54:29.518622"><title>Документация API | Распределённый калькулятор</title><script type="application/json" id="virtual-toc-data">[{"id":"b67b36d8_64","level":0,"title":"Работа с выражениями","anchor":"#b67b36d8_64"},{"id":"b67b36d8_83","level":0,"title":"Работа с операторами","anchor":"#b67b36d8_83"},{"id":"b67b36d8_95","level":0,"title":"Работа с агентами","anchor":"#b67b36d8_95"},{"id":"b67b36d8_111","level":0,"title":"Работа с задачами","anchor":"#b67b36d8_111"},{"id":"api","level":0,"title":"Ошибки API","anchor":"#api"}]</script><script type="application/json" id="topic-shortcuts"></script><link href="https://resources.jetbrains.com/writerside/apidoc/6.6.6-b205/app.css" rel="stylesheet"><link rel="apple-touch-icon" sizes="180x180" href="https://jetbrains.com/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="https://jetbrains.com/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="https://jetbrains.com/favicon-16x16.png"><link rel="manifest" href="site.webmanifest"><meta name="msapplication-TileColor" content="#000000"><meta name="msapplication-TileImage" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-144x144.png"><meta name="msapplication-square70x70logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-70x70.png"><meta name="msapplication-square150x150logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-150x150.png"><meta name="msapplication-wide310x150logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-310x150.png"><meta name="msapplication-square310x310logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-310x310.png"><meta name="image" content=""><!-- Open Graph --><meta property="og:title" content="Документация API | Распределённый калькулятор"><meta property="og:description" content=""><meta property="og:image" content=""><meta property="og:site_name" content="Распределённый калькулятор Help"><meta property="og:type" content="website"><meta property="og:locale" content="en_US"><meta property="og:url" content="api-docs.html"><!-- End Open Graph --><!-- Twitter Card --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:site" content=""><meta name="twitter:title" content="Документация API | Распределённый калькулятор"><meta name="twitter:description" content=""><meta name="twitter:creator" content=""><meta name="twitter:image:src" content=""><!-- End Twitter Card --><!-- Schema.org WebPage --><script type="application/ld+json">{
     "@context": "http://schema.org",
     "@type": "WebPage",
     "@id": "api-docs.html#webpage",
@@ -13,20 +13,20 @@
     "@id": "/#website",
     "url": "/",
     "name": "Распределённый калькулятор Help"
-}</script><!-- End Schema.org --></head><body data-id="Api-docs" data-main-title="Документация API" data-article-props="{&quot;seeAlsoStyle&quot;:&quot;links&quot;}" data-template="article" data-breadcrumbs=""><div class="wrapper"><main class="panel _main"><header class="panel__header"><div class="container"><h3>Распределённый калькулятор  Help</h3><div class="panel-trigger"></div></div></header><section class="panel__content"><div class="container"><article class="article" data-shortcut-switcher="inactive"><h1 data-toc="Api-docs" id="Api-docs.md">Документация API</h1><section class="chapter"><h2 id="b67b36d8_3" data-toc="b67b36d8_3">Работа с выражениями</h2><section class="chapter"><h3 id="b67b36d8_4" data-toc="b67b36d8_4">Создание нового выражения</h3><div class="code-block" data-lang="http">
+}</script><!-- End Schema.org --></head><body data-id="Api-docs" data-main-title="Документация API" data-article-props="{&quot;seeAlsoStyle&quot;:&quot;links&quot;}" data-template="article" data-breadcrumbs=""><div class="wrapper"><main class="panel _main"><header class="panel__header"><div class="container"><h3>Распределённый калькулятор  Help</h3><div class="panel-trigger"></div></div></header><section class="panel__content"><div class="container"><article class="article" data-shortcut-switcher="inactive"><h1 data-toc="Api-docs" id="Api-docs.md">Документация API</h1><section class="chapter"><h2 id="b67b36d8_64" data-toc="b67b36d8_64">Работа с выражениями</h2><section class="chapter"><h3 id="b67b36d8_65" data-toc="b67b36d8_65">Создание нового выражения</h3><div class="code-block" data-lang="http">
 POST /api/expressions
-</div><p id="b67b36d8_6">Проверяет ключ идемпотентности и создаёт новую запись с выраженим в базе данных и возвращает её идентификатор</p><section class="chapter"><h4 id="b67b36d8_7" data-toc="b67b36d8_7">Тело запроса</h4><div class="code-block" data-lang="json">
+</div><p id="b67b36d8_67">Проверяет ключ идемпотентности и создаёт новую запись с выраженим в базе данных и возвращает её идентификатор</p><section class="chapter"><h4 id="b67b36d8_68" data-toc="b67b36d8_68">Тело запроса</h4><div class="code-block" data-lang="json">
 {
   &quot;expression&quot;: &quot;2+2*2&quot;,
   &quot;idempotencyKey&quot;: &quot;UUID_KEY&quot;
 }
-</div></section><section class="chapter"><h4 id="b67b36d8_9" data-toc="b67b36d8_9">Тело ответа</h4><div class="code-block" data-lang="json">
+</div></section><section class="chapter"><h4 id="b67b36d8_70" data-toc="b67b36d8_70">Тело ответа</h4><div class="code-block" data-lang="json">
 {
   &quot;id&quot;: 1
 }
-</div></section></section><section class="chapter"><h3 id="b67b36d8_11" data-toc="b67b36d8_11">Получение информации и о выражении</h3><div class="code-block" data-lang="http">
+</div></section></section><section class="chapter"><h3 id="b67b36d8_72" data-toc="b67b36d8_72">Получение информации и о выражении</h3><div class="code-block" data-lang="http">
 GET /api/expression/:id
-</div><p id="b67b36d8_13">Получает информацию о выражении из базы данных, возвращает его <a href="statuses.html" id="b67b36d8_14" data-tooltip="В процессе работы приложения могут использоваться статусы в виде числа">статус</a> и результат</p><section class="chapter"><h4 id="b67b36d8_15" data-toc="b67b36d8_15">Тело ответа</h4><div class="code-block" data-lang="json">
+</div><p id="b67b36d8_74">Получает информацию о выражении из базы данных, возвращает его <a href="statuses.html" id="b67b36d8_75" data-tooltip="В процессе работы приложения могут использоваться статусы в виде числа">статус</a> и результат</p><section class="chapter"><h4 id="b67b36d8_76" data-toc="b67b36d8_76">Тело ответа</h4><div class="code-block" data-lang="json">
 {
   &quot;id&quot;: 1,
   &quot;expression&quot;: &quot;2+2*2&quot;,
@@ -35,9 +35,9 @@ GET /api/expression/:id
   &quot;status&quot;: 3,
   &quot;result&quot;: 6
 }
-</div></section></section><section class="chapter"><h3 id="b67b36d8_17" data-toc="b67b36d8_17">Получение списка всех выражений</h3><div class="code-block" data-lang="http">
+</div></section></section><section class="chapter"><h3 id="b67b36d8_78" data-toc="b67b36d8_78">Получение списка всех выражений</h3><div class="code-block" data-lang="http">
 GET /api/expressions
-</div><p id="b67b36d8_19">Возвращает информацию о всех выражениях, записанных в базе данных</p><section class="chapter"><h4 id="b67b36d8_20" data-toc="b67b36d8_20">Тело ответа</h4><div class="code-block" data-lang="json">
+</div><p id="b67b36d8_80">Возвращает информацию о всех выражениях, записанных в базе данных</p><section class="chapter"><h4 id="b67b36d8_81" data-toc="b67b36d8_81">Тело ответа</h4><div class="code-block" data-lang="json">
 [
   {
     &quot;id&quot;: 1,
@@ -48,9 +48,9 @@ GET /api/expressions
     &quot;result&quot;: 6
   }
 ]
-</div></section></section></section><section class="chapter"><h2 id="b67b36d8_22" data-toc="b67b36d8_22">Работа с операторами</h2><section class="chapter"><h3 id="b67b36d8_23" data-toc="b67b36d8_23">Сохранения нового времени выполнения для каждого оператора</h3><div class="code-block" data-lang="http">
+</div></section></section></section><section class="chapter"><h2 id="b67b36d8_83" data-toc="b67b36d8_83">Работа с операторами</h2><section class="chapter"><h3 id="b67b36d8_84" data-toc="b67b36d8_84">Сохранения нового времени выполнения для каждого оператора</h3><div class="code-block" data-lang="http">
 POST /api/operators
-</div><p id="b67b36d8_25">Сохраняет новое время выполнения для каждого <a href="expression-parse.html" id="b67b36d8_26" data-tooltip="Любое корректное выражение состоит из токенов. В проекте выделено 4 типа: число, операция, открывающая и закрывающая скобка">оператора</a></p><section class="chapter"><h4 id="b67b36d8_27" data-toc="b67b36d8_27">Тело запроса</h4><div class="code-block" data-lang="json">
+</div><p id="b67b36d8_86">Сохраняет новое время выполнения для каждого <a href="expression-parse.html" id="b67b36d8_87" data-tooltip="Любое корректное выражение состоит из токенов. В проекте выделено 4 типа: число, операция, открывающая и закрывающая скобка">оператора</a></p><section class="chapter"><h4 id="b67b36d8_88" data-toc="b67b36d8_88">Тело запроса</h4><div class="code-block" data-lang="json">
 [
   {
     &quot;operationType&quot;: 0,
@@ -69,9 +69,9 @@ POST /api/operators
     &quot;durationMS&quot;: 400
   }
 ]
-</div></section></section><section class="chapter"><h3 id="b67b36d8_29" data-toc="b67b36d8_29">Получение информации обо всех операторах</h3><div class="code-block" data-lang="http">
+</div></section></section><section class="chapter"><h3 id="b67b36d8_90" data-toc="b67b36d8_90">Получение информации обо всех операторах</h3><div class="code-block" data-lang="http">
 GET /api/operators
-</div><p id="b67b36d8_31">Возвращает тип каждого оператора и время его выполнения</p><section class="chapter"><h4 id="b67b36d8_32" data-toc="b67b36d8_32">Тело ответа</h4><div class="code-block" data-lang="json">
+</div><p id="b67b36d8_92">Возвращает тип каждого оператора и время его выполнения</p><section class="chapter"><h4 id="b67b36d8_93" data-toc="b67b36d8_93">Тело ответа</h4><div class="code-block" data-lang="json">
 [
   {
     &quot;operationType&quot;: 0,
@@ -90,17 +90,17 @@ GET /api/operators
     &quot;durationMS&quot;: 400
   }
 ]
-</div></section></section></section><section class="chapter"><h2 id="b67b36d8_34" data-toc="b67b36d8_34">Работа с агентами</h2><section class="chapter"><h3 id="b67b36d8_35" data-toc="b67b36d8_35">Добавление нового агента</h3><div class="code-block" data-lang="http">
+</div></section></section></section><section class="chapter"><h2 id="b67b36d8_95" data-toc="b67b36d8_95">Работа с агентами</h2><section class="chapter"><h3 id="b67b36d8_96" data-toc="b67b36d8_96">Добавление нового агента</h3><div class="code-block" data-lang="http">
 POST /api/worker
-</div><p id="b67b36d8_37">Добавление нового агента или актуализация (ping)</p><section class="chapter"><h4 id="b67b36d8_38" data-toc="b67b36d8_38">Тело запроса</h4><div class="code-block" data-lang="json">
+</div><p id="b67b36d8_98">Добавление нового агента или актуализация (ping)</p><section class="chapter"><h4 id="b67b36d8_99" data-toc="b67b36d8_99">Тело запроса</h4><div class="code-block" data-lang="json">
 {
     &quot;id&quot;: 1,
     &quot;url&quot;: &quot;http://localhost:8001&quot;,
     &quot;executors&quot;: 10
 }
-</div></section></section><section class="chapter"><h3 id="b67b36d8_40" data-toc="b67b36d8_40">Получение информации обо всех огентах</h3><div class="code-block" data-lang="http">
+</div></section></section><section class="chapter"><h3 id="b67b36d8_101" data-toc="b67b36d8_101">Получение информации обо всех огентах</h3><div class="code-block" data-lang="http">
 GET /api/workers
-</div><p id="b67b36d8_42">Возвращает информацию обо всех доступных агентах из базы данных</p><section class="chapter"><h4 id="b67b36d8_43" data-toc="b67b36d8_43">Тело ответа</h4><div class="code-block" data-lang="json">
+</div><p id="b67b36d8_103">Возвращает информацию обо всех доступных агентах из базы данных</p><section class="chapter"><h4 id="b67b36d8_104" data-toc="b67b36d8_104">Тело ответа</h4><div class="code-block" data-lang="json">
 [
     {
         &quot;id&quot;: 1,
@@ -115,9 +115,9 @@ GET /api/workers
         &quot;lastModified&quot;: &quot;2024-02-18T15:43:22.586835Z&quot;
     }
 ]
-</div></section></section><section class="chapter"><h3 id="b67b36d8_45" data-toc="b67b36d8_45">Получение задач, выполняемых агентом</h3><div class="code-block" data-lang="http">
+</div></section></section><section class="chapter"><h3 id="b67b36d8_106" data-toc="b67b36d8_106">Получение задач, выполняемых агентом</h3><div class="code-block" data-lang="http">
 GET /api/worker/:id/tasks
-</div><p id="b67b36d8_47">Возвращает список задач, выполняемых агентом</p><section class="chapter"><h4 id="b67b36d8_48" data-toc="b67b36d8_48">Тело ответа</h4><div class="code-block" data-lang="json">
+</div><p id="b67b36d8_108">Возвращает список задач, выполняемых агентом</p><section class="chapter"><h4 id="b67b36d8_109" data-toc="b67b36d8_109">Тело ответа</h4><div class="code-block" data-lang="json">
 [
     {
         &quot;leftResult&quot;: 2,
@@ -138,15 +138,15 @@ GET /api/worker/:id/tasks
         &quot;status&quot;: 2
     }
 ]
-</div></section></section></section><section class="chapter"><h2 id="b67b36d8_50" data-toc="b67b36d8_50">Работа с задачами</h2><p id="b67b36d8_51">Задача - простое арифметическое выражение из одной операции, которое может посчитать агент. Пути из этой группы используются только внутри приложения агентами</p><section class="chapter"><h3 id="b67b36d8_52" data-toc="b67b36d8_52">Начало работы над задачей</h3><div class="code-block" data-lang="http">
+</div></section></section></section><section class="chapter"><h2 id="b67b36d8_111" data-toc="b67b36d8_111">Работа с задачами</h2><p id="b67b36d8_112">Задача - простое арифметическое выражение из одной операции, которое может посчитать агент. Пути из этой группы используются только внутри приложения агентами</p><section class="chapter"><h3 id="b67b36d8_113" data-toc="b67b36d8_113">Начало работы над задачей</h3><div class="code-block" data-lang="http">
 POST /api/task/:id/status
-</div><p id="b67b36d8_54">Ставит статус для задачи <span class="emphasis" id="b67b36d8_55">&quot;выполняется&quot;</span>. Вызывается, когда агент начинает работу над задачей</p></section><section class="chapter"><h3 id="b67b36d8_56" data-toc="b67b36d8_56">Получение результата задачи</h3><div class="code-block" data-lang="http">
+</div><p id="b67b36d8_115">Ставит статус для задачи <span class="emphasis" id="b67b36d8_116">&quot;выполняется&quot;</span>. Вызывается, когда агент начинает работу над задачей</p></section><section class="chapter"><h3 id="b67b36d8_117" data-toc="b67b36d8_117">Получение результата задачи</h3><div class="code-block" data-lang="http">
 POST /api/task/:id/result
-</div><p id="b67b36d8_58">Записывает результат и статус для задачи</p><section class="chapter"><h4 id="b67b36d8_59" data-toc="b67b36d8_59">Тело запроса</h4><div class="code-block" data-lang="json">
+</div><p id="b67b36d8_119">Записывает результат и статус для задачи</p><section class="chapter"><h4 id="b67b36d8_120" data-toc="b67b36d8_120">Тело запроса</h4><div class="code-block" data-lang="json">
 {
   &quot;result&quot;: 10
 }
-</div></section></section></section><section class="chapter"><h2 id="api" data-toc="api">Ошибки API</h2><p id="b67b36d8_61">Иногда в работе сервиса могут возникать ошибки, имеющие следующую структуру:</p><div class="code-block" data-lang="json">
+</div></section></section></section><section class="chapter"><h2 id="api" data-toc="api">Ошибки API</h2><p id="b67b36d8_122">Иногда в работе сервиса могут возникать ошибки, имеющие следующую структуру:</p><div class="code-block" data-lang="json">
 {
     &quot;code&quot;: 400,
     &quot;message&quot;: &quot;expression: invalid brackets placement&quot;,

@@ -4,7 +4,7 @@
 ## Запуск проекта
 * клонируйте репозиторий и перейдите в корневую папку:
     ```Bash
-  $ git clone github.com/AleksandrVishniakov/distributed-calculator
+  $ git clone https://github.com/AleksandrVishniakov/distributed-calculator
   $ cd distributed-calculator
   ```
 * выполните команду ```make``` или выполните команды из Makefile последовательно вручную:
