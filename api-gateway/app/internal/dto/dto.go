@@ -24,11 +24,6 @@ type ExpressionResponseDTO struct {
 	Result     float64   `json:"result"`
 }
 
-type LimitOffsetRequest struct {
-	Limit  int `json:"limit"`
-	Offset int `json:"offset"`
-}
-
 type OperationDTO struct {
 	OperationType expr_tokens.OperationType `json:"operationType"`
 	DurationMS    int                       `json:"durationMS"`

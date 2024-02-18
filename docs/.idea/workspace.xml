@@ -4,7 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="952c2938-7398-4fa9-a778-45e0fecb3c12" name="Changes" comment="" />
+    <list default="true" id="952c2938-7398-4fa9-a778-45e0fecb3c12" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Writerside/hi.tree" beforeDir="false" afterPath="$PROJECT_DIR$/Writerside/hi.tree" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Writerside/topics/Database-structure.md" beforeDir="false" afterPath="$PROJECT_DIR$/Writerside/topics/Database-structure.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Writerside/topics/Default-topic.md" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -66,18 +71,14 @@
     "Writerside.Web Archive (hi).executor": "Run",
     "git-widget-placeholder": "main",
     "last_opened_file_path": "C:/Users/AV/go/src/distributed-calculator/docs/Writerside/topics"
-  },
-  "keyToStringList": {
-    "stardust.markdown.MarkdownSplitEditorSuppressor:keyList": [
-      "C:/Users/AV/go/src/distributed-calculator/docs/Writerside/topics/Database-structure.md",
-      "C:/Users/AV/go/src/distributed-calculator/docs/Writerside/topics/Default-topic.md",
-      "C:/Users/AV/go/src/distributed-calculator/docs/Writerside/topics/Project-overview.md"
-    ]
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\AV\go\src\distributed-calculator\docs\Writerside\topics" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\AV\go\src\distributed-calculator\docs\Writerside\images" />
     </key>
   </component>
   <component name="RunManager">

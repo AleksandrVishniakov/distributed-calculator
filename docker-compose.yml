@@ -6,6 +6,8 @@ services:
     container_name: dc-api-gateway
     environment:
       HTTP_PORT: 8000
+      WORKERS_MONITORING_PERIOD_MS: 30000
+      DB_PASSWORD: "admin"
     ports:
       - "8000:8000"
     depends_on:

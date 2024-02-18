@@ -3,11 +3,14 @@
         SYSTEM "https://resources.jetbrains.com/writerside/1.0/product-profile.dtd">
 
 <instance-profile id="hi"
-                 name="Help Instance"
-                 start-page="Default-topic.md">
+                 name="Распределённый калькулятор. Документация"
+                 start-page="Project-overview.md">
 
-    <toc-element topic="Default-topic.md"/>
     <toc-element topic="Project-overview.md"/>
+    <toc-element topic="How-to-start.md"/>
+    <toc-element topic="Api-docs.md"/>
     <toc-element topic="Database-structure.md"/>
+    <toc-element topic="Expression-parse.md"/>
+    <toc-element topic="Statuses.md"/>
 
 </instance-profile>
