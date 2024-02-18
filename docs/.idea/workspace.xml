@@ -6,23 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="952c2938-7398-4fa9-a778-45e0fecb3c12" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HelpTOC.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Map.jhm" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Writerside/hi.tree" beforeDir="false" afterPath="$PROJECT_DIR$/Writerside/hi.tree" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Writerside/topics/Api-docs.md" beforeDir="false" afterPath="$PROJECT_DIR$/Writerside/topics/Api-docs.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api-docs.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/current.help.version" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/database-structure.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/expression-parse.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/how-to-start.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/icon-192.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/icon-512.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/distributed-calculator database design.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/project-overview.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/site.webmanifest" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/statuses.html" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

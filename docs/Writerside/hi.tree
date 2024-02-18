@@ -12,5 +12,6 @@
     <toc-element topic="Database-structure.md"/>
     <toc-element topic="Expression-parse.md"/>
     <toc-element topic="Statuses.md"/>
+    <toc-element topic="Sequence-diagram.md"/>
 
 </instance-profile>
