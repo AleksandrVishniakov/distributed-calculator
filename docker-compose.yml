@@ -7,7 +7,7 @@ services:
     environment:
       HTTP_PORT: 8000
       WORKERS_MONITORING_PERIOD_MS: 30000
-      DB_PASSWORD: "admin"
+      DB_PASSWORD: ${DB_PASSWORD}
     ports:
       - "8000:8000"
     depends_on:
@@ -22,7 +22,7 @@ services:
     environment:
       - POSTGRES_DB=distributed-calculator-db
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD="admin"
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
     volumes:
       - ./data:/var/lib/postgresql/data
     healthcheck:
@@ -40,7 +40,7 @@ services:
       - ./api-gateway/db/migrations:/db/migrations
     environment:
       GOOSE_DRIVER: postgres
-      GOOSE_DBSTRING: "postgres://postgres:admin@postgres:5432/distributed-calculator-db?sslmode=disable"
+      GOOSE_DBSTRING: "postgres://postgres:${DB_PASSWORD}@postgres:5432/distributed-calculator-db?sslmode=disable"
     command: ["-dir", "/db/migrations", "up"]
 
   daemon1:
