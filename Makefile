@@ -1,7 +1,10 @@
-all: d-build-api-gateway d-build-daemon d-build-page-parser d-compose
+all: d-build-auth d-build-api-gateway d-build-daemon d-build-page-parser d-compose
 
 d-build-api-gateway: .
 	docker build -t dc-api-gateway:local ./api-gateway
+
+d-build-auth: .
+	docker build -t dc-auth:local ./auth
 
 d-build-daemon: .
 	docker build -t dc-daemon:local ./daemon

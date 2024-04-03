@@ -1,0 +1,50 @@
+version: '3'
+
+services:
+  auth:
+    image: auth-srv:local
+    container_name: auth-srv
+    environment:
+      CONFIG_PATH: ./configs/local.yml
+      JWT_SIGNATURE: ${JWT_SIGNATURE}
+      DB_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "44044:44044"
+      - "8080:8080"
+    depends_on:
+      migrator:
+        condition: service_completed_successfully
+    command: [ "./app", "--config=configs/local.yml" ]
+
+  pg-auth:
+    image: postgres:14-alpine
+    container_name: pg-auth-db
+    ports:
+      - "5503:5503"
+    expose:
+      - "5503"
+    command: -p 5503
+    environment:
+      - POSTGRES_DB=auth-db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - ./db/local/data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -p 5503" ]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+
+  migrator:
+    image: artsafin/goose-migrations:latest
+    container_name: migrator
+    depends_on:
+      pg-auth:
+        condition: service_healthy
+    volumes:
+      - ./db/migrations:/db/migrations
+    environment:
+      GOOSE_DRIVER: postgres
+      GOOSE_DBSTRING: "postgres://postgres:${DB_PASSWORD}@pg-auth:5503/auth-db?sslmode=disable"
+    command: [ "-dir", "/db/migrations", "up" ]

@@ -1,0 +1,23 @@
+env: "local"
+
+tokenTTL: 12h
+
+http:
+  port: 8080
+
+grpc:
+  port: 44044
+  timeout: 5s
+
+cache:
+  ttl: 15m
+  max-size: 5
+
+db:
+  port: 5503
+  host: pg-auth
+  db-name: auth-db
+  username: postgres
+  ssl-mode: disable
+  max-connections: 10
+  max-idle-connections: 5
