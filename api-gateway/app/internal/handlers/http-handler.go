@@ -2,6 +2,10 @@ package handlers
 
 import (
 	"errors"
+	"net/http"
+	"strconv"
+	"time"
+
 	"github.com/AleksandrVishniakov/distributed-calculator/api-gateway/app/internal/dto"
 	"github.com/AleksandrVishniakov/distributed-calculator/api-gateway/app/internal/handlers/middlewares"
 	"github.com/AleksandrVishniakov/distributed-calculator/api-gateway/app/internal/services/binary_tree"
@@ -13,10 +17,8 @@ import (
 	"github.com/AleksandrVishniakov/distributed-calculator/api-gateway/app/internal/services/statuses"
 	"github.com/AleksandrVishniakov/distributed-calculator/api-gateway/app/internal/services/worker_api"
 	"github.com/AleksandrVishniakov/distributed-calculator/api-gateway/app/internal/services/workers_storage"
+
 	"github.com/gin-gonic/gin"
-	"net/http"
-	"strconv"
-	"time"
 )
 
 type HTTPHandler struct {
