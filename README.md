@@ -6,17 +6,19 @@
 
 ### Запуск проекта
 * клонируйте репозиторий и перейдите в корневую папку:
-    ```Bash
-  $ git clone https://github.com/AleksandrVishniakov/distributed-calculator
-  $ cd distributed-calculator
+    ```
+  git clone https://github.com/AleksandrVishniakov/distributed-calculator
+  cd distributed-calculator
   ```
 * выполните команду ```make``` или выполните команды из Makefile последовательно вручную:
-    ```Bash
-  $ docker build -t dc-api-gateway:local ./api-gateway
-  $ docker build -t dc-daemon:local ./daemon
-  $ docker build -t dc-page-parser:local ./page-parser
-  $ docker compose up
+    ```
+  docker build -t dc-api-gateway:local ./api-gateway
+  docker build -t dc-daemon:local ./daemon
+  docker build -t dc-auth:local ./auth
+  docker build -t dc-page-parser:local ./page-parser
+  docker compose up
   ```
+* Если при запуске прокета возникли ошибки инициализации базы данных или у мигратора (goose), то помогает перезапуск (`make` или `docker compose up`). Если возники другие ошибки, пожалуйста, напишите [сюда](https://t.me/landowner7)
 * Готово! GUI приложения доступно на [http://localhost:8080](http://localhost:8080)
 
 ### Изменения в структуре приложения
