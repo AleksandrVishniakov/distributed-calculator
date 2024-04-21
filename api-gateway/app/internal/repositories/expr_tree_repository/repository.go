@@ -27,7 +27,8 @@ func NewExpressionsTreeRepository(db *sql.DB) ExpressionsTreeRepository {
 
 func (e *expressionsTreeRepository) Create(entity *ExpressionTreeNodeEntity) (int, error) {
 	row := e.db.QueryRow(
-		"INSERT INTO expressions_tree (parent_id, expression_id, type, operation_type, status, result) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id",
+		"INSERT INTO expressions_tree (user_id, parent_id, expression_id, type, operation_type, status, result) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id",
+		entity.UserID,
 		nullableInt(entity.ParentId),
 		entity.ExpressionId,
 		entity.Type,
@@ -92,7 +93,7 @@ func (e *expressionsTreeRepository) FindByParentId(parentId int) ([]*ExpressionT
 		var nullableWorkerId sql.NullInt32
 		var nullableOperationType sql.NullInt32
 
-		err := rows.Scan(&entity.Id, &nullableParentId, &entity.ExpressionId, &entity.Type, &nullableOperationType, &entity.Status, &entity.Result, &nullableWorkerId)
+		err := rows.Scan(&entity.Id, &entity.UserID, &nullableParentId, &entity.ExpressionId, &entity.Type, &nullableOperationType, &entity.Status, &entity.Result, &nullableWorkerId)
 		if err != nil {
 			return nil, err
 		}
@@ -135,7 +136,7 @@ func (e *expressionsTreeRepository) FindById(id int) (*ExpressionTreeNodeEntity,
 	var nullableWorkerId sql.NullInt32
 	var nullableOperationType sql.NullInt32
 
-	err := row.Scan(&entity.Id, &nullableParentId, &entity.ExpressionId, &entity.Type, &nullableOperationType, &entity.Status, &entity.Result, &nullableWorkerId)
+	err := row.Scan(&entity.Id, &entity.UserID, &nullableParentId, &entity.ExpressionId, &entity.Type, &nullableOperationType, &entity.Status, &entity.Result, &nullableWorkerId)
 	entity.WorkerId = int(nullableWorkerId.Int32)
 
 	if nullableParentId.Valid {

@@ -6,10 +6,13 @@ services:
     container_name: dc-api-gateway
     environment:
       HTTP_PORT: 8000
+      GRPC_PORT: 8800
       WORKERS_MONITORING_PERIOD_MS: 30000
       DB_PASSWORD: ${DB_PASSWORD}
+      JWT_SIGNATURE: ${JWT_SIGNATURE}
     ports:
       - "8000:8000"
+      - "8800:8800"
     depends_on:
       goose:
         condition: service_completed_successfully
@@ -23,9 +26,11 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
     ports:
       - "44044:44044"
+      - "8005:8005"
     depends_on:
       goose-auth:
         condition: service_completed_successfully
+    command: [ "./app", "--config=configs/local.yml" ]
 
   postgres:
     image: postgres:14-alpine
@@ -60,10 +65,10 @@ services:
     image: postgres:14-alpine
     container_name: dc-auth-db
     ports:
-      - "5003:5003"
+      - "5503:5503"
     expose:
-      - "5003"
-    command: -p 5003
+      - "5503"
+    command: -p 5503
     environment:
       - POSTGRES_DB=auth-db
       - POSTGRES_USER=postgres
@@ -71,7 +76,7 @@ services:
     volumes:
       - ./auth/data:/var/lib/postgresql/data
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres -p 5003" ]
+      test: [ "CMD-SHELL", "pg_isready -U postgres -p 5503" ]
       interval: 5s
       timeout: 10s
       retries: 5
@@ -85,7 +90,7 @@ services:
       - ./auth/db/migrations:/db/migrations
     environment:
       GOOSE_DRIVER: postgres
-      GOOSE_DBSTRING: "postgres://postgres:${DB_PASSWORD}@pg-auth:5003/auth-db?sslmode=disable"
+      GOOSE_DBSTRING: "postgres://postgres:${DB_PASSWORD}@pg-auth:5503/auth-db?sslmode=disable"
     command: [ "-dir", "/db/migrations", "up" ]
 
   daemon1:
@@ -94,14 +99,15 @@ services:
     image: dc-daemon:local
     container_name: dc-daemon-1
     environment:
-      HTTP_PORT: 8001
+      #HTTP_PORT: 8001
+      GRPC_PORT: 8801
       DAEMON_ID: 1
-      DAEMON_HOST: "http://daemon1:8001" 
-      ORCHESTRATOR_HOST: "http://api-gateway:8000"
+      DAEMON_HOST: "daemon1:8801"
+      ORCHESTRATOR_HOST: "api-gateway:8800"
       PING_PERIOD_MS: 25000
       MAX_GOROUTINES: 1
     ports:
-      - "8001:8001"
+      - "8801:8801"
 
   daemon2:
     depends_on:
@@ -109,14 +115,15 @@ services:
     image: dc-daemon:local
     container_name: dc-daemon-2
     environment:
-      HTTP_PORT: 8002
+      #HTTP_PORT: 8002
+      GRPC_PORT: 8802
       DAEMON_ID: 2
-      DAEMON_HOST: "http://daemon2:8002" 
-      ORCHESTRATOR_HOST: "http://api-gateway:8000"
+      DAEMON_HOST: "daemon2:8802"
+      ORCHESTRATOR_HOST: "api-gateway:8800"
       PING_PERIOD_MS: 25000
       MAX_GOROUTINES: 5
     ports:
-      - "8002:8002"
+      - "8802:8802"
 
   page-parser:
     depends_on:

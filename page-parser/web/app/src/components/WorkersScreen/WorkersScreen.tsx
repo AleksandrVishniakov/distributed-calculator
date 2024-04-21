@@ -1,12 +1,10 @@
-import React, {useEffect, useState} from "react";
-import ResponseError from "../../ResponseError";
+import React, {useEffect} from "react";
 
-interface WorkersScreenProps {
-    host: string
-    onError: (msg: string) => void
-}
+import './WorkersScreen.css'
+import Worker from "./Worker";
+import {WorkerAPI} from "../../api/WorkersAPI";
 
-interface Worker {
+interface WorkerDTO {
     id: number
     url: string
     executors: number
@@ -20,55 +18,34 @@ interface Task {
     status: number
 }
 
-const formatResponseError = (err: ResponseError): string => {
-    return err.code + ". " + err.message
+interface Props {
+    workersAPI: WorkerAPI
+    onError: (msg: string) => void
 }
 
-const WorkersScreen: React.FC<WorkersScreenProps> = (props) => {
-    const [workers, setWorkers] = useState(new Array<Worker>())
-    const [tasks, setTasks] = useState(new Array<Task>())
-    const [workerId, setWorkerId] = useState(-1)
+const WorkersScreen: React.FC<Props> = ({workersAPI, onError}) => {
+    const [workers, setWorkers] = React.useState<Array<WorkerDTO>>(new Array<WorkerDTO>());
 
-    const getWorkers = async () => {
-        const response = await fetch(props.host + "/api/workers", {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-        });
-
-        const json = await response.json();
-
-        if (response.ok) {
-            const resp = json as Worker[]
-
-            setWorkers(resp)
-        } else {
-            const err = json as ResponseError
-            props.onError(formatResponseError(err))
-
-            console.error(json)
-        }
+    const getWorkers = () => {
+        workersAPI.getWorkers()
+            .then((w) => {
+                setWorkers(w);
+            })
+            .catch((e) => {
+                onError(e.toString())
+            })
     }
 
-    const getWorkerTasks = async (workerId: number) => {
-        const response = await fetch(props.host + "/api/worker/" + workerId + "/tasks", {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-        });
+    const getTaskCallback = (workerId: number) => {
+        return async ()  => {
+            try {
+                return await workersAPI.getTasks(workerId)
+            }
+            catch (e: any) {
+                onError(e.toString())
+            }
 
-        const json = await response.json();
-
-        if (response.ok) {
-            const resp = json as Task[]
-
-            setTasks(resp)
-        } else {
-            const err = json as ResponseError
-            props.onError(formatResponseError(err))
-            console.error(json)
+            return new Array<Task>()
         }
     }
 
@@ -76,82 +53,28 @@ const WorkersScreen: React.FC<WorkersScreenProps> = (props) => {
         getWorkers()
     }, []);
 
-    const handleTaskListClick = async (workerId: number) => {
-        setWorkerId(workerId)
-        getWorkerTasks(workerId)
-    }
-
-    const formatTask = (task: Task): string => {
-        let operator: string
-        switch (task.operationType) {
-            case 0:
-                operator = "+"
-                break
-            case 1:
-                operator = "-"
-                break
-            case 2:
-                operator = "*"
-                break
-            case 3:
-                operator = "/"
-                break
-            default:
-                operator = ""
-        }
-
-        let status: string
-        switch (task.status) {
-            case 1:
-                status = "в очереди"
-                break
-            case 2:
-                status = "выполняется"
-                break
-            case 4:
-                status = "ошибка вычисления"
-                break
-            default:
-                status = ""
-        }
-
-        return task.leftResult + operator + task.rightResult + " (" + status + ")"
-    }
-
     return (
-        <div>
-            {
-                workers.length > 0 ?
-                    workers.map((worker, index) => {
-                        return (
-                            <div key={index}>
-                                <h4>Машина №{worker.id}</h4>
-                                <p>Url: {worker.url}</p>
-                                <p>Горутины: {worker.executors}</p>
+        <section className="WorkersScreen">
+            <h2 className="WorkersScreen__title">
+                Активные машины
+            </h2>
 
-                                {
-                                    workerId === worker.id ?
-                                        <ol>
-                                            {
-                                                tasks.length > 0 ? tasks.map((task, index) => {
-                                                    return (
-                                                        <li>{formatTask(task)}</li>
-                                                    )
-                                                }) : <i>нет заданий</i>
-                                            }
-                                        </ol> : <span></span>
-                                }
+            <div className="WorkersScreen__workers-container">
+                {workers.map((w)=>{
+                    return (
+                        <Worker
+                            key={w.id}
+                            id={w.id}
+                            url={w.url}
+                            executors={w.executors}
+                            lastModified={w.lastModified}
 
-                                <button onClick={() => {
-                                    handleTaskListClick(worker.id)
-                                }}>Список заданий
-                                </button>
-                            </div>
-                        )
-                    }) :
-                    <i>нет доступных машин</i>
-            }
-        </div>
+                            getTasks={getTaskCallback(w.id)}
+                        />
+                    )
+                })}
+            </div>
+        </section>
     )
 }
 

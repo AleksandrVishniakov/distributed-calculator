@@ -1,0 +1,20 @@
+.AppIcon {
+    display: flex;
+    align-items: center;
+}
+
+.AppIcon > svg {
+    fill: var(--primary);
+    height: 24px;
+    width: 24px;
+}
+
+.AppIcon > svg.large {
+    height: 36px;
+    width: 36px;
+}
+
+.AppIcon > svg.small {
+    height: 18px;
+    width: 18px;
+}

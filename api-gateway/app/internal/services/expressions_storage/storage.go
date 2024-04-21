@@ -15,9 +15,10 @@ var (
 
 type ExpressionStorage interface {
 	FindByIdempotencyKey(key string, expression expression.Expression) (int, error)
-	Create(expressions expression.Expression, key string) (int, error)
+	Create(expressions expression.Expression, userID uint64, key string) (int, error)
 	FindById(id int) (*dto.ExpressionResponseDTO, error)
 	FindAll() ([]*dto.ExpressionResponseDTO, error)
+	FindAllByUserID(userID uint64) ([]*dto.ExpressionResponseDTO, error)
 	SaveResult(id int, result float64) error
 	MarkAsCalculating(id int) error
 	MarkAsFailed(id int) error
@@ -35,8 +36,8 @@ func (e *expressionStorage) FindByIdempotencyKey(key string, expression expressi
 	return e.repository.FindByIdempotencyKey(key, string(expression))
 }
 
-func (e *expressionStorage) Create(expr expression.Expression, key string) (int, error) {
-	return e.repository.Create(string(expr), int(statuses.Created), key)
+func (e *expressionStorage) Create(expr expression.Expression, userID uint64, key string) (int, error) {
+	return e.repository.Create(string(expr), userID, int(statuses.Created), key)
 }
 
 func (e *expressionStorage) FindById(id int) (*dto.ExpressionResponseDTO, error) {
@@ -55,6 +56,21 @@ func (e *expressionStorage) FindById(id int) (*dto.ExpressionResponseDTO, error)
 
 func (e *expressionStorage) FindAll() ([]*dto.ExpressionResponseDTO, error) {
 	entities, err := e.repository.FindAll()
+	if err != nil {
+		return nil, err
+	}
+
+	var expressions []*dto.ExpressionResponseDTO
+
+	for _, e := range entities {
+		expressions = append(expressions, dto.MapExpressionResponseFromEntity(e))
+	}
+
+	return expressions, nil
+}
+
+func (e *expressionStorage) FindAllByUserID(userID uint64) ([]*dto.ExpressionResponseDTO, error) {
+	entities, err := e.repository.FindAllByUserID(userID)
 	if err != nil {
 		return nil, err
 	}

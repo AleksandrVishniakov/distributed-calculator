@@ -23,7 +23,7 @@ func NewWorkerStorage(repository workers_repository.WorkersRepository) WorkerSto
 
 func (w *workerStorage) Register(worker *dto.WorkerRequestDTO) (bool, error) {
 	return w.repository.Register(&workers_repository.WorkerEntity{
-		Id:        worker.Id,
+		Id:        int(worker.Id),
 		Url:       worker.Url,
 		Executors: worker.Executors,
 	})

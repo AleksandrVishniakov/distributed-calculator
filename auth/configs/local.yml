@@ -3,7 +3,7 @@ env: "local"
 tokenTTL: 12h
 
 http:
-  port: 8080
+  port: 8005
 
 grpc:
   port: 44044

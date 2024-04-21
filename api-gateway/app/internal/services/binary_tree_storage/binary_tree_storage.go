@@ -9,7 +9,7 @@ import (
 )
 
 type BinaryTreeStorage interface {
-	SaveTree(root *binary_tree.Node, expressionId int, parentId int, isLeft bool) (int, error)
+	SaveTree(root *binary_tree.Node, userID uint64, expressionId int, parentId int, isLeft bool) (int, error)
 	MarkAsCalculating(id int) error
 	MarkAsFailed(id int) error
 	SaveResult(id int, result float64) error
@@ -30,7 +30,7 @@ func NewBinaryTreeStorage(repository expr_tree_repository.ExpressionsTreeReposit
 	return &binaryTreeStorage{repository: repository}
 }
 
-func (b *binaryTreeStorage) SaveTree(node *binary_tree.Node, expressionId int, parentId int, isLeft bool) (int, error) {
+func (b *binaryTreeStorage) SaveTree(node *binary_tree.Node, userID uint64, expressionId int, parentId int, isLeft bool) (int, error) {
 	if node == nil {
 		return 0, nil
 	}
@@ -61,6 +61,7 @@ func (b *binaryTreeStorage) SaveTree(node *binary_tree.Node, expressionId int, p
 	}
 
 	id, err := b.repository.Create(&expr_tree_repository.ExpressionTreeNodeEntity{
+		UserID:        userID,
 		ParentId:      parentId,
 		ExpressionId:  expressionId,
 		Type:          taskType,
@@ -73,12 +74,12 @@ func (b *binaryTreeStorage) SaveTree(node *binary_tree.Node, expressionId int, p
 		return 0, err
 	}
 
-	_, err = b.SaveTree(node.Left, expressionId, id, true)
+	_, err = b.SaveTree(node.Left, userID, expressionId, id, true)
 	if err != nil {
 		return 0, err
 	}
 
-	_, err = b.SaveTree(node.Right, expressionId, id, false)
+	_, err = b.SaveTree(node.Right, userID, expressionId, id, false)
 	if err != nil {
 		return 0, err
 	}
@@ -109,6 +110,7 @@ func (b *binaryTreeStorage) FindByParentId(parentId int) ([]*dto.ExpressionNodeD
 	for _, entity := range entities {
 		expressionNodes = append(expressionNodes, &dto.ExpressionNodeDTO{
 			Id:            entity.Id,
+			UserID:        entity.UserID,
 			ParentId:      entity.ParentId,
 			ExpressionId:  entity.ExpressionId,
 			Type:          entity.Type,
@@ -128,9 +130,13 @@ func (b *binaryTreeStorage) SaveWorker(id int, workerId int) error {
 
 func (b *binaryTreeStorage) FindById(id int) (*dto.ExpressionNodeDTO, error) {
 	entity, err := b.repository.FindById(id)
+	if err != nil {
+		return nil, err
+	}
 
 	return &dto.ExpressionNodeDTO{
 		Id:            entity.Id,
+		UserID:        entity.UserID,
 		ParentId:      entity.ParentId,
 		ExpressionId:  entity.ExpressionId,
 		Type:          entity.Type,

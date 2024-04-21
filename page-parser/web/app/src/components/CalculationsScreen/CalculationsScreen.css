@@ -1,0 +1,74 @@
+.CalculationsScreen {
+    width: 100%;
+    padding: 10px clamp(15px, 10vw, 150px);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    color: var(--on-background);
+}
+
+.CalculationsScreen__title {
+    padding-left: 30px;
+    position: relative;
+
+    &::before {
+        position: absolute;
+        content: '';
+        height: 100%;
+        top: 0;
+        left: 0;
+        width: 10px;
+        background: var(--primary);
+    }
+}
+
+.CalculationsScreen__form {
+    display: flex;
+    flex-direction: row;
+    width: 30vw;
+    align-items: center;
+
+    padding-bottom: 50px;
+}
+
+.CalculationsScreen__form input {
+    padding: 10px 20px;
+    flex-grow: 1;
+    border: 3px solid var(--container);
+    border-right: none;
+
+    border-radius: 10px 0 0 10px;
+}
+
+.CalculationsScreen__form button {
+    flex-grow: 0;
+    height: 40px;
+    width: 40px;
+
+    border: 2.5px solid var(--container);
+    border-left: none;
+
+    background-color: var(--primary);
+    color: var(--on-primary);
+}
+
+table {
+    border-collapse: collapse;
+}
+
+tr:hover:not(:has(th)) {
+    background-color: rgba(0, 255, 255, 0.11);
+}
+
+td, th {
+    padding: 10px 0;
+    border-bottom: 2px solid var(--container)
+}
+
+td {
+    font-size: 14px;
+}
+
+td:not(:first-child) {
+    text-align: center;
+}

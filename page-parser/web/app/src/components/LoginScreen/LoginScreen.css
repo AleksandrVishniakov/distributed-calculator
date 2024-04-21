@@ -1,0 +1,10 @@
+.LoginScreen {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+
+    background-color: white;
+
+    height: 100vh;
+}

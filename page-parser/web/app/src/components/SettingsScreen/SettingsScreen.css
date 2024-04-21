@@ -1,0 +1,100 @@
+.SettingsScreen {
+    width: 100%;
+    padding: 10px clamp(15px, 10vw, 150px);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    color: var(--on-background);
+}
+
+.SettingsScreen__title {
+    padding-left: 30px;
+    position: relative;
+
+    &::before {
+        position: absolute;
+        content: '';
+        height: 100%;
+        top: 0;
+        left: 0;
+        width: 10px;
+        background: var(--primary);
+    }
+}
+
+.SettingsScreen__form {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+
+    width: fit-content;
+}
+
+.SettingsScreen__input-wrapper {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+
+    padding-left: 40px;
+
+    &::before {
+        position: absolute;
+        left: 0;
+
+        color: var(--primary);
+
+        font-size: 40px;
+    }
+
+    &:nth-child(1)::before {
+        content: '+'
+    }
+
+    &:nth-child(2)::before {
+        content: '-'
+    }
+
+    &:nth-child(3)::before {
+        content: '/'
+    }
+
+    &:nth-child(4)::before {
+        content: '*'
+    }
+}
+
+.SettingsScreen__input-wrapper input {
+    padding: 10px 20px;
+    width: clamp(150px, 30vw, 300px);
+
+    background-color: var(--background);
+    color: var(--on-background);
+
+    border: 3px solid var(--container);
+    border-radius: 5px;
+
+    transition-duration: .3s;
+}
+
+.SettingsScreen__input-wrapper input:is(:hover, :focus, :active){
+    cursor: pointer;
+    background-color: var(--container--hover);
+}
+
+.SettingsScreen__form button {
+    padding: 10px 20px;
+
+    background-color: var(--background);
+    color: var(--primary);
+
+    border: 3px solid var(--primary);
+    border-radius: 5px;
+
+    transition-duration: .3s;
+}
+
+.SettingsScreen__form button:hover {
+    cursor: pointer;
+    background-color: var(--primary);
+    color: var(--on-primary);
+}

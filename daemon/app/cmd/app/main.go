@@ -2,17 +2,24 @@ package main
 
 import (
 	"context"
-	"github.com/AleksandrVishniakov/distributed-calculator/daemon/app/internal/handlers"
-	"github.com/AleksandrVishniakov/distributed-calculator/daemon/app/internal/servers"
-	"github.com/AleksandrVishniakov/distributed-calculator/daemon/app/internal/services/executors_pool"
-	"github.com/AleksandrVishniakov/distributed-calculator/daemon/app/internal/services/orhestrator_pinger"
+	"fmt"
+	"github.com/AleksandrVishniakov/distributed-calculator/daemon/app/internal/servers/grpcsrv"
+	"google.golang.org/grpc"
 	"log"
+	"net"
 	"os"
 	"strconv"
+	"sync"
 	"time"
+
+	"github.com/AleksandrVishniakov/distributed-calculator/daemon/app/internal/services/executors_pool"
+	"github.com/AleksandrVishniakov/distributed-calculator/daemon/app/internal/services/orhestrator_pinger"
 )
 
 func main() {
+	ctx := context.Background()
+	wg := &sync.WaitGroup{}
+
 	id, err := strconv.Atoi(os.Getenv("DAEMON_ID"))
 	if err != nil {
 		log.Fatal(err)
@@ -28,17 +35,18 @@ func main() {
 		log.Fatal(err)
 	}
 
-	pool := executors_pool.NewExecutorsPool(executors)
-	defer pool.Shutdown()
+	poolManager := executors_pool.NewManager(executors)
+	defer poolManager.Shutdown()
 
-	handler := handlers.NewHTTPHandler(os.Getenv("ORCHESTRATOR_HOST"), pool)
-	server := servers.NewHTTPServer(os.Getenv("HTTP_PORT"), handler.InitRoutes())
+	//handler := handlers.NewHTTPHandler(os.Getenv("ORCHESTRATOR_HOST"), poolManager)
+	//server := httpsrv.NewHTTPServer(os.Getenv("HTTP_PORT"), handler.InitRoutes())
 
 	pinger, err := orhestrator_pinger.NewOrchestratorPinger(
-		id,
+		ctx,
+		uint64(id),
 		os.Getenv("DAEMON_HOST"),
-		executors,
 		os.Getenv("ORCHESTRATOR_HOST"),
+		executors,
 	)
 
 	if err != nil {
@@ -46,12 +54,32 @@ func main() {
 	}
 
 	pinger.MustPingOrchestrator(
-		time.Duration(period) * time.Millisecond,
+		ctx,
+		time.Duration(period)*time.Millisecond,
 	)
 
-	log.Println("server started on port", os.Getenv("HTTP_PORT"))
-	if err := server.Run(); err != nil {
-		server.Shutdown(context.Background())
-		log.Fatal(err)
-	}
+	gRPCServer := grpc.NewServer()
+	grpcsrv.Register(gRPCServer, os.Getenv("ORCHESTRATOR_HOST"), poolManager)
+
+	//go func() {
+	//	log.Println("server started on port", os.Getenv("HTTP_PORT"))
+	//	if err := server.Run(); err != nil {
+	//		server.Shutdown(context.Background())
+	//		log.Println(err)
+	//	}
+	//}()
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		l, err := net.Listen("tcp", fmt.Sprintf(":%s", os.Getenv("GRPC_PORT")))
+		if err != nil {
+			log.Println(err)
+		}
+		if err := gRPCServer.Serve(l); err != nil {
+			log.Println(err)
+		}
+	}()
+
+	wg.Wait()
 }

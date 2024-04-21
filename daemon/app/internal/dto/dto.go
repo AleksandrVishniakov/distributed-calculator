@@ -6,7 +6,8 @@ import (
 )
 
 type CalculationRequestDTO struct {
-	Id        int                      `json:"id"`
+	ID        uint64                   `json:"id"`
+	UserID    uint64                   `json:"userID"`
 	First     float64                  `json:"first"`
 	Second    float64                  `json:"second"`
 	Operation operations.OperationType `json:"operation"`
@@ -14,7 +15,7 @@ type CalculationRequestDTO struct {
 }
 
 type OrchestratorPingDTO struct {
-	Id        int    `json:"id"`
+	ID        uint64 `json:"id"`
 	Url       string `json:"url"`
 	Executors int    `json:"executors"`
 }

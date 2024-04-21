@@ -1,0 +1,72 @@
+.WorkersScreen {
+    width: 100%;
+    padding: 10px clamp(15px, 10vw, 150px);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    color: var(--on-background);
+}
+
+.WorkersScreen__title {
+    padding-left: 30px;
+    position: relative;
+
+    &::before {
+        position: absolute;
+        content: '';
+        height: 100%;
+        top: 0;
+        left: 0;
+        width: 10px;
+        background: var(--primary);
+    }
+}
+
+.WorkersScreen__workers-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 20px;
+    flex-wrap: wrap;
+
+    transition-duration: .3s;
+}
+
+.Worker {
+    padding: 10px 30px;
+    background-color: var(--container);
+    border-radius: 10px;
+
+    width: fit-content;
+
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+
+    transition-duration: .3s;
+}
+
+.Worker button {
+    color: var(--on-background);
+    text-decoration: underline;
+    padding: 10px 20px;
+    width: fit-content;
+    border-radius: 10px;
+    background-color: var(--container);
+    transition-duration: .3s;
+}
+
+
+.Worker button:hover {
+    cursor: pointer;
+    background-color: var(--container--hover);
+    text-decoration: none;
+}
+
+.Worker__calculations {
+    height: 100%;
+    width: 250px;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+}

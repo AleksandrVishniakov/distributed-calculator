@@ -2,6 +2,7 @@ package expr_tree_repository
 
 type ExpressionTreeNodeEntity struct {
 	Id            int
+	UserID        uint64
 	ParentId      int
 	ExpressionId  int
 	Type          int

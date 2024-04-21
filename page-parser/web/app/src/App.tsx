@@ -1,28 +1,123 @@
 import React, {forwardRef, useState} from 'react';
 import './App.css';
-import Header from "./components/Header/Header";
-import Navigation from "./components/Navigation/Navigation";
-import CalculationScreen from "./components/CalculationsScreen/CalculationScreen";
-import SettingsScreen from "./components/SettingsScreen/SettingsScreen";
-import WorkersScreen from "./components/WorkersScreen/WorkersScreen";
+import useSavedState from "./hooks/useSavedState";
+import RegisterScreen from "./components/RegisterScreen/RegisterScreen";
+import LoginScreen from "./components/LoginScreen/LoginScreen";
+import ActionsScreen from "./components/ActionsScreen/ActionsScreen";
+import HomeScreen from "./components/HomeScreen/HomeSreen";
+import {AuthAPI} from "./api/AuthAPI";
+import {ExpressionsAPI} from "./api/ExpressionsAPI";
+import {OperatorsAPI} from "./api/OperatorsAPI";
+import {WorkerAPI} from "./api/WorkersAPI";
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 
-
 enum Screens {
-    Calculation,
-    Workers,
-    Settings,
+    Home,
+    Register,
+    Login,
+    Actions
 }
 
-interface AppProps {
-    host: string
+function AppNavigation(
+    authAPI : AuthAPI,
+    expressionsAPI : ExpressionsAPI,
+    operatorsAPI : OperatorsAPI,
+    workersAPI : WorkerAPI,
+    screen: Screens,
+    setScreen: React.Dispatch<React.SetStateAction<number>>,
+    onError: (msg: string)=>void
+): React.ReactNode {
+    switch (screen) {
+        case Screens.Register:
+            return (
+                <RegisterScreen
+                    authAPI={authAPI}
+
+                    onChangeRegisterScreens={()=>{
+                        setScreen(Screens.Login)
+                    }}
+
+                    onHome={()=>{
+                        setScreen(Screens.Home)
+                    }}
+
+                    onError={onError}
+                    onSuccess={()=>{
+                        setScreen(Screens.Login)
+                    }}
+                />
+            )
+
+        case Screens.Login:
+            return (
+                <LoginScreen
+                    authAPI={authAPI}
+
+
+                    onChangeRegisterScreens={()=>{
+                        setScreen(Screens.Register)
+                    }}
+
+                    onHome={()=>{
+                        setScreen(Screens.Home)
+                    }}
+
+                    onError={onError}
+                    onSuccess={()=>{
+                        setScreen(Screens.Actions)
+                    }}
+                />
+            )
+
+        case Screens.Actions:
+            return (
+                <ActionsScreen
+                    expressionsAPI={expressionsAPI}
+                    operatorsAPI={operatorsAPI}
+                    workersAPI={workersAPI}
+
+                    user = {{
+                        login: "выйти"
+                    }}
+
+                    onLogout={()=>{
+                        setScreen(Screens.Home)
+                        localStorage.removeItem("token")
+                    }}
+                    onError={onError}
+                />
+            )
+
+        case Screens.Home:
+            return (
+                <HomeScreen
+                    onLogin={()=>{
+                        setScreen(Screens.Login)
+                    }}
+                    onRegister={()=>{
+                        setScreen(Screens.Register)
+                    }}
+                />
+            )
+    }
+
 }
 
-const App: React.FC<AppProps> = (props) => {
-    const [currentScreen, setScreen] = useState(Screens.Calculation)
+const App: React.FC<{
+    authAPI: AuthAPI
+    expressionsAPI: ExpressionsAPI
+    operatorsAPI: OperatorsAPI
+    workersAPI : WorkerAPI
+}> = (props) => {
+    const [screen, setScreen] = useSavedState<number>(Screens.Actions, "screen")
+    const [theme, setTheme] = useSavedState<"light" | "dark">("dark", "theme")
     const [errorSnackbarOpen, setErrorSnackbarOpen] = useState(false)
     const [errorSnackbarText, setErrorSnackbarText] = useState("")
+
+    const toggleTheme = () => {
+        setTheme(theme === "light" ? "dark" : "light");
+    }
 
     const handleSnackbarClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
         if (reason === 'clickaway') {
@@ -32,58 +127,29 @@ const App: React.FC<AppProps> = (props) => {
         setErrorSnackbarOpen(false);
     };
 
-    const handleAppError = (msg: string) => {
-        console.log(msg)
+    const handleError = (msg: string) => {
+        if (msg.split(": ")[1] === "401") {
+            setScreen(Screens.Home)
+        }
+        console.error(msg)
+
         setErrorSnackbarText(msg)
         setErrorSnackbarOpen(true)
     }
 
-    const renderScreen = () => {
-        switch (currentScreen) {
-            case Screens.Calculation:
-                return (
-                    <CalculationScreen
-                        onClick={(expr) => {
-
-                        }}
-
-                        host={props.host}
-                        onError={handleAppError}
-                    />
-                )
-
-            case Screens.Settings:
-                return <SettingsScreen host={props.host} onError={handleAppError}/>
-            case Screens.Workers:
-                return <WorkersScreen host={props.host} onError={handleAppError}/>
-        }
-    }
-
     return (
-        <div className="App">
-            <div style={{position: "sticky", width: "100%"}}>
-                <Header>
-                    <h1>Распределённый калькулятор</h1>
-                </Header>
-
-                <Navigation elements={[
-                    ["посчитать выражение", () => {
-                        setScreen(Screens.Calculation)
-                    }],
-                    ["доступные машины", () => {
-                        setScreen(Screens.Workers)
-                    }],
-                    ["настройки", () => {
-                        setScreen(Screens.Settings)
-                    }],
-                ]}/>
-            </div>
-
-            <main>
-                {
-                    renderScreen()
-                }
-            </main>
+        <div className={`App ${theme}`}>
+            {
+                AppNavigation(
+                    props.authAPI,
+                    props.expressionsAPI,
+                    props.operatorsAPI,
+                    props.workersAPI,
+                    screen,
+                    setScreen,
+                    handleError
+                )
+            }
 
             <Snackbar open={errorSnackbarOpen} autoHideDuration={5000} onClose={handleSnackbarClose}
                       anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}>
@@ -92,10 +158,8 @@ const App: React.FC<AppProps> = (props) => {
                 </Alert>
             </Snackbar>
         </div>
-);
+    );
 }
-
-export default App;
 
 const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(
     props,
@@ -103,3 +167,5 @@ const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(
 ) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
+
+export default App;

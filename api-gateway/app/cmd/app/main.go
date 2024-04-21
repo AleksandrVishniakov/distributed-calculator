@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"github.com/AleksandrVishniakov/distributed-calculator/api-gateway/app/internal/dto"
 	"github.com/AleksandrVishniakov/distributed-calculator/api-gateway/app/internal/handlers"
 	"github.com/AleksandrVishniakov/distributed-calculator/api-gateway/app/internal/repositories/expr_tree_repository"
@@ -10,21 +11,28 @@ import (
 	"github.com/AleksandrVishniakov/distributed-calculator/api-gateway/app/internal/repositories/postgres"
 	"github.com/AleksandrVishniakov/distributed-calculator/api-gateway/app/internal/repositories/workers_repository"
 	"github.com/AleksandrVishniakov/distributed-calculator/api-gateway/app/internal/servers"
+	"github.com/AleksandrVishniakov/distributed-calculator/api-gateway/app/internal/servers/grpcsrv"
 	"github.com/AleksandrVishniakov/distributed-calculator/api-gateway/app/internal/services/binary_tree_storage"
 	"github.com/AleksandrVishniakov/distributed-calculator/api-gateway/app/internal/services/expression/expr_tokens"
 	"github.com/AleksandrVishniakov/distributed-calculator/api-gateway/app/internal/services/expressions_storage"
 	"github.com/AleksandrVishniakov/distributed-calculator/api-gateway/app/internal/services/operators_storage"
 	"github.com/AleksandrVishniakov/distributed-calculator/api-gateway/app/internal/services/worker_api"
 	"github.com/AleksandrVishniakov/distributed-calculator/api-gateway/app/internal/services/workers_storage"
+	"github.com/AleksandrVishniakov/distributed-calculator/api-gateway/app/pkg/jwt"
 	"github.com/AleksandrVishniakov/distributed-calculator/api-gateway/app/util/configs"
 	"github.com/joho/godotenv"
+	"google.golang.org/grpc"
 	"log"
+	"net"
 	"os"
 	"strconv"
+	"sync"
 	"time"
 )
 
 func main() {
+	wg := &sync.WaitGroup{}
+
 	envInit()
 
 	var httpPort = os.Getenv("HTTP_PORT")
@@ -46,7 +54,12 @@ func main() {
 	binaryTreeStorage := binary_tree_storage.NewBinaryTreeStorage(binaryTreeRepository)
 	operatorsStorage := operators_storage.NewOperatorsStorage(operatorsRepository)
 
-	workerAPI := worker_api.NewWorkerAPI(5 * time.Second)
+	workerAPI := worker_api.NewGRPCWorkerAPI()
+
+	tokensGenerator := &jwt.TokenGenerator{
+		Signature: []byte(os.Getenv("JWT_SIGNATURE")),
+		TokenTTL:  12 * time.Hour,
+	}
 
 	handler := handlers.NewHTTPHandler(
 		expressionStorage,
@@ -54,6 +67,7 @@ func main() {
 		workersStorage,
 		operatorsStorage,
 		workerAPI,
+		tokensGenerator,
 	)
 	server := servers.NewHTTPServer(httpPort, handler.InitRoutes())
 
@@ -74,10 +88,38 @@ func main() {
 
 	monitorWorkers(workersStorage, binaryTreeStorage)
 
-	if err := server.Run(); err != nil {
-		server.Shutdown(context.Background())
-		log.Fatalf("server shutted down: %s\n", err.Error())
-	}
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		if err := server.Run(); err != nil {
+			server.Shutdown(context.Background())
+			log.Fatalf("server shutted down: %s\n", err.Error())
+		}
+	}()
+
+	gRPCServer := grpc.NewServer()
+	grpcsrv.Register(
+		gRPCServer,
+		binaryTreeStorage,
+		operatorsStorage,
+		workersStorage,
+		expressionStorage,
+		workerAPI,
+	)
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		l, err := net.Listen("tcp", fmt.Sprintf(":%s", os.Getenv("GRPC_PORT")))
+		if err != nil {
+			log.Println(err)
+		}
+		if err := gRPCServer.Serve(l); err != nil {
+			log.Println(err)
+		}
+	}()
+
+	wg.Wait()
 }
 
 func envInit() {

@@ -30,7 +30,7 @@ type OperationDTO struct {
 }
 
 type WorkerRequestDTO struct {
-	Id        int    `json:"id"`
+	Id        uint64 `json:"id"`
 	Url       string `json:"url"`
 	Executors int    `json:"executors"`
 }
@@ -48,6 +48,7 @@ type CalculationResultDTO struct {
 
 type ExpressionNodeDTO struct {
 	Id            int             `json:"id"`
+	UserID        uint64          `json:"userId"`
 	ParentId      int             `json:"parentId"`
 	ExpressionId  int             `json:"expressionId"`
 	Type          int             `json:"type"`

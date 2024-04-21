@@ -2,23 +2,24 @@ package handlers
 
 import (
 	"encoding/json"
+	"net/http"
+
 	"github.com/AleksandrVishniakov/distributed-calculator/daemon/app/internal/dto"
 	"github.com/AleksandrVishniakov/distributed-calculator/daemon/app/internal/services/executors_pool"
-	"net/http"
 )
 
 type HTTPHandler struct {
 	orchestratorHost string
-	executorsPool    *executors_pool.ExecutorsPool
+	poolManager      *executors_pool.PoolManager
 }
 
 func NewHTTPHandler(
 	orchestratorHost string,
-	executorsPool *executors_pool.ExecutorsPool,
+	poolManager *executors_pool.PoolManager,
 ) *HTTPHandler {
 	return &HTTPHandler{
 		orchestratorHost: orchestratorHost,
-		executorsPool:    executorsPool,
+		poolManager:      poolManager,
 	}
 }
 
@@ -39,7 +40,13 @@ func (h *HTTPHandler) calculate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	executor := executors_pool.NewCalculationExecutor(requestDTO, h.orchestratorHost)
+	pool := h.poolManager.Pool(requestDTO.UserID)
 
-	h.executorsPool.Run(executor)
+	executor, err := executors_pool.NewCalculationExecutor(r.Context(), requestDTO, h.orchestratorHost)
+	if err != nil {
+		dto.NewResponseError(http.StatusInternalServerError, err.Error()).Abort(w)
+		return
+	}
+
+	pool.Run(executor)
 }

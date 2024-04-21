@@ -1,9 +1,12 @@
 package executors_pool
 
-import "sync"
+import (
+	"context"
+	"sync"
+)
 
 type Executor interface {
-	Task()
+	Task(ctx context.Context)
 }
 
 type ExecutorsPool struct {
@@ -11,7 +14,7 @@ type ExecutorsPool struct {
 	wg    sync.WaitGroup
 }
 
-func NewExecutorsPool(maxGoroutines int) *ExecutorsPool {
+func NewExecutorsPool(ctx context.Context, maxGoroutines int) *ExecutorsPool {
 	p := ExecutorsPool{
 		tasks: make(chan Executor, 5*maxGoroutines),
 	}
@@ -20,7 +23,7 @@ func NewExecutorsPool(maxGoroutines int) *ExecutorsPool {
 	for i := 0; i < maxGoroutines; i++ {
 		go func() {
 			for w := range p.tasks {
-				w.Task()
+				w.Task(ctx)
 			}
 
 			p.wg.Done()

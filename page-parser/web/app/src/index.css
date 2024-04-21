@@ -1,14 +1,156 @@
-body {
-  margin: 0;
-  padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+html {
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+:root {
+  /* light theme */
+  --background-light: #fffcf8;
+  --on-background-light: #1c1c1c;
+
+  --primary-light: #259100;
+  --on-primary-light: #e3dbe7;
+
+  --title-light: #000000;
+
+  --label-light: #98a7b6;
+
+  --error-container-light: rgba(255, 107, 107, 0.39);
+  --error-light: rgb(250, 63, 63);
+
+  --container-light: #EEEEEE;
+  --container-light--hover: #c1c1c1;
+  --container-light--shadow: rgba(0,0,0,0.5);
+
+
+  /* dark theme */
+  --background-dark: #222831;
+  --on-background-dark: #EEEEEE;
+
+  --primary-dark: #07b503;
+  --on-primary-dark: #ffffff;
+
+  --title-dark: #EEEEEE;
+
+  --label-dark: #525762;
+
+  --error-container-dark: rgb(104, 50, 50);
+  --error-dark: rgb(250, 63, 63);
+
+  --container-dark: #313c4b;
+  --container-dark--hover: #405165;
+  --container-dark--shadow: rgba(0, 0, 0, 0);
+
+
+  /* default theme */
+  --background: var(--background-light);
+  --on-background: var(--on-background-light);
+
+  --primary: var(--primary-light);
+  --on-primary: var(--on-primary-light);
+
+  --label: var(--label-light);
+
+  --title: var(--title-light);
+
+  --container: var(--container-light);
+  --container--hover: var(--container-light--hover);
+  --container--shadow: var(--container-light--shadow);
+
+  --error: var(--error-light);
+  --error-container: var(--error-container-light);
+}
+
+:root {
+  --primary-font: 'Montserrat';
+}
+
+body {
+  margin: 0;
+  overflow-x: hidden;
+  width: 100vw;
+
+  font-family: var(--primary-font);
+  font-weight: 300;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  background-color: var(--background);
+}
+
+.App.dark {
+  --background: var(--background-dark);
+  --on-background: var(--on-background-dark);
+
+  --primary: var(--primary-dark);
+  --on-primary: var(--on-primary-dark);
+
+  --label: var(--label-dark);
+
+  --title: var(--title-dark);
+
+  --container: var(--container-dark);
+  --container--hover: var(--container-dark--hover);
+  --container--shadow: var(--container-dark--shadow);
+
+  --error: var(--error-dark);
+  --error-container: var(--error-container-dark);
+}
+
+h1 {
+  color: var(--title);
+  font-family: var(--primary-font);
+  font-weight: 900;
+}
+
+button, input {
+  outline: none;
+  border: none;
+}
+
+button:hover, a:hover {
+  cursor: pointer;
+  outline: none;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.background {
+  width: 100%;
+  height: 100%;;
+
+  background: #fff url('./assets/login-background.jpg') no-repeat right 0 top 0;
+
+  background-size: cover;
+}
+
+@media (max-width: 700px) {
+  .background {
+    display: none;
+  }
+}
+
+*:disabled {
+  filter: grayscale(90%);
+}
+
+*:disabled:hover {
+  cursor: not-allowed;
 }

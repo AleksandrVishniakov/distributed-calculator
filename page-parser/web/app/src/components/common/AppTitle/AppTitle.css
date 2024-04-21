@@ -1,0 +1,18 @@
+.AppTitle {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 20px;
+
+    width: fit-content;
+
+    max-width: 300px;
+
+    color: var(--title)
+}
+
+.AppTitle:hover {
+    cursor: pointer;
+}

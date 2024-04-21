@@ -1,0 +1,20 @@
+.SidePanel {
+    padding: 20px 10px 20px 10px;
+    width: clamp(500px, 45vw, 700px);
+    height: 100vh;
+
+    background-color: var(--background);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-content: start;
+
+    overflow-y: auto;
+}
+
+@media (max-width: 700px) {
+    .SidePanel {
+        width: 100%;
+    }
+}

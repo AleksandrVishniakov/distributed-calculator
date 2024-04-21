@@ -1,39 +1,55 @@
 package executors_pool
 
 import (
-	"bytes"
-	"encoding/json"
-	"fmt"
-	"github.com/AleksandrVishniakov/distributed-calculator/daemon/app/internal/dto"
-	"github.com/AleksandrVishniakov/distributed-calculator/daemon/app/internal/services/operations"
+	"context"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 	"log"
-	"net/http"
 	"sync"
 	"time"
+
+	orchestrator "github.com/AleksandrVishniakov/dc-protos/gen/go/orchestrator/v1"
+	"github.com/AleksandrVishniakov/distributed-calculator/daemon/app/internal/dto"
+	"github.com/AleksandrVishniakov/distributed-calculator/daemon/app/internal/services/operations"
 )
 
 type CalculationExecutor struct {
-	id               int
-	first            float64
-	second           float64
-	operation        operations.OperationType
-	duration         time.Duration
-	orchestratorHost string
+	id        uint64
+	first     float64
+	second    float64
+	operation operations.OperationType
+	duration  time.Duration
+
+	client orchestrator.OrchestratorClient
 }
 
-func NewCalculationExecutor(request *dto.CalculationRequestDTO, orchestratorHost string) *CalculationExecutor {
-	return &CalculationExecutor{
-		id:               request.Id,
-		first:            request.First,
-		second:           request.Second,
-		operation:        request.Operation,
-		duration:         request.Duration,
-		orchestratorHost: orchestratorHost,
+func NewCalculationExecutor(
+	ctx context.Context,
+	request *dto.CalculationRequestDTO,
+	orchestratorGRPCHost string,
+) (*CalculationExecutor, error) {
+	cc, err := grpc.DialContext(
+		ctx,
+		orchestratorGRPCHost,
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+	)
+	if err != nil {
+		return nil, err
 	}
+
+	return &CalculationExecutor{
+		id:        request.ID,
+		first:     request.First,
+		second:    request.Second,
+		operation: request.Operation,
+		duration:  request.Duration,
+
+		client: orchestrator.NewOrchestratorClient(cc),
+	}, nil
 }
 
-func (e *CalculationExecutor) Task() {
-	e.sendStartingRequest()
+func (e *CalculationExecutor) Task(ctx context.Context) {
+	e.sendStartingRequest(ctx)
 
 	var result float64
 
@@ -53,62 +69,38 @@ func (e *CalculationExecutor) Task() {
 	wg.Add(1)
 	time.AfterFunc(e.duration, func() {
 		defer wg.Done()
-		e.sendResultRequest(result)
+		e.sendResultRequest(ctx, result)
 	})
 
 	wg.Wait()
 }
 
-func (e *CalculationExecutor) sendStartingRequest() {
-	client := http.Client{
-		Timeout: 5 * time.Second,
-	}
+func (e *CalculationExecutor) sendStartingRequest(ctx context.Context) {
+	log.Println("starting request")
+	resp, err := e.client.StartTask(ctx, &orchestrator.TaskStartingRequest{
+		Id: e.id,
+	})
 
-	url := fmt.Sprintf("%s/api/task/%d/status", e.orchestratorHost, e.id)
-
-	req, err := http.NewRequest(http.MethodPost, url, nil)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("starting request err: ", err)
 	}
 
-	resp, err := client.Do(req)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	if resp.StatusCode >= 400 {
-		if err != nil {
-			log.Fatal("starting request failed with error:", resp.Status)
-		}
+	if !resp.Ok {
+		log.Fatal("starting request is not ok")
 	}
 }
 
-func (e *CalculationExecutor) sendResultRequest(result float64) {
-	requestJSON, err := json.Marshal(&dto.CalculationResultDTO{Result: result})
+func (e *CalculationExecutor) sendResultRequest(ctx context.Context, result float64) {
+	resp, err := e.client.SendTaskResult(ctx, &orchestrator.TaskResultRequest{
+		Id:     e.id,
+		Result: float32(result),
+	})
+
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("starting request err: ", err)
 	}
 
-	client := http.Client{
-		Timeout: 5 * time.Second,
-	}
-
-	url := fmt.Sprintf("%s/api/task/%d/result", e.orchestratorHost, e.id)
-
-	req, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(requestJSON))
-	req.Header.Set("Content-Type", "application/json")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	resp, err := client.Do(req)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	if resp.StatusCode >= 400 {
-		if err != nil {
-			log.Fatal("starting request failed with error:", resp.Status)
-		}
+	if !resp.Ok {
+		log.Fatal("starting request is not ok")
 	}
 }

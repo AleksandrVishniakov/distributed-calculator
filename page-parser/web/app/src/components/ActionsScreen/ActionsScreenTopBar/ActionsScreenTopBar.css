@@ -1,0 +1,65 @@
+.ActionsScreenTopBar {
+    width: 100%;
+    padding: 10px clamp(15px, 10vw, 150px);
+    background-color: var(--container);
+
+    -webkit-box-shadow: 0 3px 10px -1px var(--container--shadow);
+    -moz-box-shadow: 0 3px 10px -1px var(--container--shadow);
+    box-shadow: 0 3px 10px -1px var(--container--shadow);
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 20px;
+}
+
+.ActionsScreenTopBar__profile {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    padding: 5px 10px;
+    border: 3px solid var(--primary);
+    border-radius: 26px;
+    transition-duration: .3s;
+
+    & .ActionsScreenTopBar__profile-icon {
+        width: 32px;
+        height: 32px;
+        fill: var(--on-background);
+    }
+
+    & .ActionsScreenTopBar__profile-username {
+        color: var(--on-background);
+        margin: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        min-width: 50px;
+        max-width: 150px;
+    }
+
+    & .ActionsScreenTopBar__logout-icon {
+        fill: var(--primary);
+        width: 28px;
+        height: 28px;
+    }
+
+    &:is(:hover, :focus, :active) {
+        cursor: pointer;
+        background-color: var(--container--hover);
+    }
+}
+
+@media (max-width: 750px) {
+    .ActionsScreenTopBar {
+        flex-direction: column;
+        padding: 10px clamp(10px, 5vw, 50px);
+    }
+
+    .ActionsScreenTopBar__header {
+        text-align: center;
+    }
+}

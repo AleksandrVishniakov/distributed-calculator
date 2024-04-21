@@ -2,6 +2,7 @@
 -- +goose StatementBegin
 CREATE TABLE IF NOT EXISTS expressions (
     id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL,
     expression TEXT NOT NULL DEFAULT '',
     status smallint NOT NULL DEFAULT 0,
     result double precision NOT NULL DEFAULT 0,

@@ -2,22 +2,24 @@ package handlers
 
 import (
 	"errors"
+	"fmt"
 	"github.com/AleksandrVishniakov/distributed-calculator/api-gateway/app/internal/dto"
 	"github.com/AleksandrVishniakov/distributed-calculator/api-gateway/app/internal/handlers/middlewares"
 	"github.com/AleksandrVishniakov/distributed-calculator/api-gateway/app/internal/services/binary_tree"
 	"github.com/AleksandrVishniakov/distributed-calculator/api-gateway/app/internal/services/binary_tree_storage"
 	"github.com/AleksandrVishniakov/distributed-calculator/api-gateway/app/internal/services/expression"
-	"github.com/AleksandrVishniakov/distributed-calculator/api-gateway/app/internal/services/expression/expr_tokens"
 	"github.com/AleksandrVishniakov/distributed-calculator/api-gateway/app/internal/services/expressions_storage"
 	"github.com/AleksandrVishniakov/distributed-calculator/api-gateway/app/internal/services/operators_storage"
-	"github.com/AleksandrVishniakov/distributed-calculator/api-gateway/app/internal/services/statuses"
 	"github.com/AleksandrVishniakov/distributed-calculator/api-gateway/app/internal/services/worker_api"
 	"github.com/AleksandrVishniakov/distributed-calculator/api-gateway/app/internal/services/workers_storage"
+	"github.com/AleksandrVishniakov/distributed-calculator/api-gateway/app/pkg/jwt"
+	"github.com/AleksandrVishniakov/distributed-calculator/api-gateway/app/util/calc"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
-	"time"
 )
+
+const tempUserID = 1
 
 type HTTPHandler struct {
 	expressionStorage expressions_storage.ExpressionStorage
@@ -25,6 +27,8 @@ type HTTPHandler struct {
 	workersStorage    workers_storage.WorkerStorage
 	operatorsStorage  operators_storage.OperatorsStorage
 	workerAPI         worker_api.WorkerAPI
+
+	tokensGenerator *jwt.TokenGenerator
 }
 
 func NewHTTPHandler(
@@ -33,6 +37,7 @@ func NewHTTPHandler(
 	workersStorage workers_storage.WorkerStorage,
 	operatorsStorage operators_storage.OperatorsStorage,
 	workerAPI worker_api.WorkerAPI,
+	tokensGenerator *jwt.TokenGenerator,
 ) *HTTPHandler {
 	return &HTTPHandler{
 		expressionStorage: expressionStorage,
@@ -40,6 +45,7 @@ func NewHTTPHandler(
 		workersStorage:    workersStorage,
 		operatorsStorage:  operatorsStorage,
 		workerAPI:         workerAPI,
+		tokensGenerator:   tokensGenerator,
 	}
 }
 
@@ -48,13 +54,15 @@ func (h *HTTPHandler) InitRoutes() *gin.Engine {
 
 	router.Use(middlewares.CORSHeaders())
 
+	jwtAuth := middlewares.NewJWTAuthMiddleware(h.tokensGenerator)
+
 	api := router.Group("/api")
 	{
 		api.GET("/operators", h.getAllOperations)
 		api.POST("/operators", h.saveAllOperations)
 
-		api.POST("/expression", h.calculateExpression)
-		api.GET("/expressions", h.getAllExpressions)
+		api.POST("/expression", jwtAuth(), h.calculateExpression)
+		api.GET("/expressions", jwtAuth(), h.getAllExpressions)
 		api.GET("/expression/:id", h.handleExpressionStatusRequest)
 
 		api.POST("/task/:id/result", h.handleTaskResult)
@@ -69,9 +77,15 @@ func (h *HTTPHandler) InitRoutes() *gin.Engine {
 }
 
 func (h *HTTPHandler) calculateExpression(c *gin.Context) {
+	userID, err := userID(c)
+	if err != nil {
+		dto.NewResponseError(http.StatusBadRequest, err.Error()).Abort(c)
+		return
+	}
+
 	var calculationRequest dto.CalculationRequestDTO
 
-	err := c.BindJSON(&calculationRequest)
+	err = c.BindJSON(&calculationRequest)
 	if err != nil {
 		dto.NewResponseError(http.StatusBadRequest, err.Error()).Abort(c)
 		return
@@ -103,7 +117,7 @@ func (h *HTTPHandler) calculateExpression(c *gin.Context) {
 		}
 	}
 
-	expressionId, err := h.expressionStorage.Create(expr, calculationRequest.IdempotencyKey)
+	expressionId, err := h.expressionStorage.Create(expr, userID, calculationRequest.IdempotencyKey)
 	if err != nil {
 		dto.NewResponseError(http.StatusInternalServerError, err.Error()).Abort(c)
 		return
@@ -117,13 +131,21 @@ func (h *HTTPHandler) calculateExpression(c *gin.Context) {
 
 	root := binary_tree.NewBinaryTree(binary_tree.TokensToNodeArray(tokens))
 
-	taskId, err := h.binaryTreeStorage.SaveTree(root, expressionId, -1, true)
+	taskId, err := h.binaryTreeStorage.SaveTree(root, userID, expressionId, -1, true)
 	if err != nil {
 		dto.NewResponseError(http.StatusInternalServerError, err.Error()).Abort(c)
 		return
 	}
 
-	err = h.startCalculating(taskId)
+	err = calc.StartCalculating(
+		c,
+		taskId,
+		h.binaryTreeStorage,
+		h.operatorsStorage,
+		h.workersStorage,
+		h.expressionStorage,
+		h.workerAPI,
+	)
 	if err != nil {
 		dto.NewResponseError(http.StatusInternalServerError, err.Error()).Abort(c)
 		return
@@ -164,7 +186,13 @@ func (h *HTTPHandler) handleExpressionStatusRequest(c *gin.Context) {
 }
 
 func (h *HTTPHandler) getAllExpressions(c *gin.Context) {
-	expressions, err := h.expressionStorage.FindAll()
+	userID, err := userID(c)
+	if err != nil {
+		dto.NewResponseError(http.StatusBadRequest, err.Error()).Abort(c)
+		return
+	}
+
+	expressions, err := h.expressionStorage.FindAllByUserID(userID)
 	if err != nil {
 		dto.NewResponseError(http.StatusInternalServerError, err.Error()).Abort(c)
 		return
@@ -197,27 +225,18 @@ func (h *HTTPHandler) handleWorkerRegister(c *gin.Context) {
 		return
 	}
 
-	err = h.calculateAll()
+	err = calc.CalculateAll(
+		c,
+		h.binaryTreeStorage,
+		h.operatorsStorage,
+		h.workersStorage,
+		h.expressionStorage,
+		h.workerAPI,
+	)
 	if err != nil {
 		dto.NewResponseError(http.StatusInternalServerError, err.Error()).Abort(c)
 		return
 	}
-}
-
-func (h *HTTPHandler) calculateAll() error {
-	ids, err := h.binaryTreeStorage.FindUncalculated()
-	if err != nil {
-		return err
-	}
-
-	for _, id := range ids {
-		err = h.startCalculating(id)
-		if err != nil {
-			return err
-		}
-	}
-
-	return nil
 }
 
 func (h *HTTPHandler) getAllWorkers(c *gin.Context) {
@@ -298,7 +317,14 @@ func (h *HTTPHandler) handleTaskResult(c *gin.Context) {
 	//	return
 	//}
 
-	err = h.calculateAll()
+	err = calc.CalculateAll(
+		c,
+		h.binaryTreeStorage,
+		h.operatorsStorage,
+		h.workersStorage,
+		h.expressionStorage,
+		h.workerAPI,
+	)
 	if err != nil {
 		dto.NewResponseError(http.StatusInternalServerError, err.Error()).Abort(c)
 	}
@@ -337,98 +363,6 @@ func (h *HTTPHandler) saveAllOperations(c *gin.Context) {
 	}
 }
 
-func (h *HTTPHandler) startCalculating(id int) error {
-	node, err := h.binaryTreeStorage.FindById(id)
-	if err != nil {
-		return err
-	}
-
-	if node.Status != statuses.Created {
-		return nil
-	}
-
-	nodes, err := h.binaryTreeStorage.FindByParentId(id)
-	if err != nil {
-		return err
-	}
-
-	if len(nodes) == 0 {
-		return nil
-	}
-
-	left := nodes[0]
-	right := nodes[1]
-
-	if left.Status == statuses.Finished && right.Status == statuses.Finished {
-		operations, err := h.operatorsStorage.FindAll()
-		if err != nil {
-			return err
-		}
-
-		operationDuration, err := getOperationDuration(operations, expr_tokens.OperationType(node.OperationType))
-		if err != nil {
-			return err
-		}
-
-		worker, err := h.workersStorage.FindFreeWorker()
-		if err != nil {
-			return err
-		}
-
-		if worker == nil {
-			return nil
-		}
-
-		var operation = expr_tokens.OperationType(node.OperationType)
-
-		if operation == expr_tokens.Divide && right.Result == 0 {
-			err = h.expressionStorage.MarkAsFailed(node.ExpressionId)
-			if err != nil {
-				return err
-			}
-
-			err = h.binaryTreeStorage.MarkAsFailed(node.Id)
-			if err != nil {
-				return err
-			}
-
-			return nil
-		}
-
-		err = h.workerAPI.Calculate(worker.Url, &worker_api.CalculationRequestDTO{
-			Id:        id,
-			First:     left.Result,
-			Second:    right.Result,
-			Operation: operation,
-			Duration:  operationDuration,
-		})
-		if err != nil {
-			return err
-		}
-
-		err = h.binaryTreeStorage.SaveWorker(id, worker.Id)
-		if err != nil {
-			return err
-		}
-	} else {
-		if left.Status == statuses.Created {
-			err := h.startCalculating(left.Id)
-			if err != nil {
-				return err
-			}
-		}
-
-		if right.Status == statuses.Created {
-			err := h.startCalculating(right.Id)
-			if err != nil {
-				return err
-			}
-		}
-	}
-
-	return nil
-}
-
 func (h *HTTPHandler) handleWorkerTasks(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -445,12 +379,13 @@ func (h *HTTPHandler) handleWorkerTasks(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, tasks)
 }
 
-func getOperationDuration(operations []*dto.OperationDTO, operationType expr_tokens.OperationType) (time.Duration, error) {
-	for _, operation := range operations {
-		if operation.OperationType == operationType {
-			return time.Duration(operation.DurationMS) * time.Millisecond, nil
-		}
+func userID(c *gin.Context) (uint64, error) {
+	userID, err := strconv.ParseUint(fmt.Sprintf("%v", c.Value("user_id")), 10, 64)
+	if err != nil {
+		return 0, err
 	}
 
-	return 0, errors.New("operation not found")
+	return userID, nil
+
+	//return tempUserID, nil
 }

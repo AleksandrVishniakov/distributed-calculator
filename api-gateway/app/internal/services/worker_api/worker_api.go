@@ -1,17 +1,17 @@
 package worker_api
 
 import (
-	"bytes"
-	"encoding/json"
-	"errors"
+	"context"
 	"fmt"
+	daemonv1 "github.com/AleksandrVishniakov/dc-protos/gen/go/daemon/v1"
 	"github.com/AleksandrVishniakov/distributed-calculator/api-gateway/app/internal/services/expression/expr_tokens"
-	"net/http"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 	"time"
 )
 
 type CalculationRequestDTO struct {
-	Id        int                       `json:"id"`
+	Id        uint64                    `json:"id"`
 	First     float64                   `json:"first"`
 	Second    float64                   `json:"second"`
 	Operation expr_tokens.OperationType `json:"operation"`
@@ -19,35 +19,42 @@ type CalculationRequestDTO struct {
 }
 
 type WorkerAPI interface {
-	Calculate(host string, requestBody *CalculationRequestDTO) error
+	Calculate(ctx context.Context, host string, userID uint64, requestBody *CalculationRequestDTO) error
 }
 
-type workerAPI struct {
-	client http.Client
+type gRPCWorkerAPI struct{}
+
+func NewGRPCWorkerAPI() WorkerAPI {
+	return &gRPCWorkerAPI{}
 }
 
-func NewWorkerAPI(timeout time.Duration) WorkerAPI {
-	return &workerAPI{client: http.Client{Timeout: timeout}}
-}
+func (g *gRPCWorkerAPI) Calculate(ctx context.Context, host string, userID uint64, requestBody *CalculationRequestDTO) error {
+	cc, err := grpc.DialContext(
+		ctx,
+		host,
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+	)
 
-func (w *workerAPI) Calculate(host string, requestBody *CalculationRequestDTO) error {
-	requestJSON, err := json.Marshal(requestBody)
 	if err != nil {
 		return err
 	}
 
-	url := fmt.Sprintf("%s/api/task", host)
+	client := daemonv1.NewDaemonClient(cc)
 
-	req, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(requestJSON))
-	req.Header.Set("Content-Type", "application/json")
-
-	resp, err := w.client.Do(req)
+	resp, err := client.CalculateTask(ctx, &daemonv1.CalculationRequestDTO{
+		Id:        requestBody.Id,
+		UserID:    userID,
+		First:     float32(requestBody.First),
+		Second:    float32(requestBody.Second),
+		Operation: daemonv1.OperationType(requestBody.Operation),
+		Duration:  uint64(requestBody.Duration.Milliseconds()),
+	})
 	if err != nil {
 		return err
 	}
 
-	if resp.StatusCode >= 400 {
-		return errors.New("worker calculate request failed with status: " + resp.Status)
+	if !resp.Ok {
+		return fmt.Errorf("response is not ok")
 	}
 
 	return nil

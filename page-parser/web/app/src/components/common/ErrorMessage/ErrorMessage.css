@@ -1,0 +1,23 @@
+.ErrorMessage {
+    display: flex;
+    flex-direction: column;
+    align-content: start;
+
+    padding: 0 10px 10px 10px;
+    width: calc(100% - 20px);
+
+    border-radius: 5px;
+    border: 2px solid var(--error);
+
+    background-color: var(--error-container);
+
+    color: var(--error);
+}
+
+.ErrorMessage_err-title {
+    font-weight: 500;
+}
+
+.ErrorMessage_err-msg {
+    font-weight: 300;
+}

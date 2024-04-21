@@ -1,41 +1,52 @@
 package orhestrator_pinger
 
 import (
-	"bytes"
-	"encoding/json"
-	"errors"
-	"github.com/AleksandrVishniakov/distributed-calculator/daemon/app/internal/dto"
+	"context"
+	"fmt"
 	"log"
-	"net/http"
 	"time"
+
+	orchestrator "github.com/AleksandrVishniakov/dc-protos/gen/go/orchestrator/v1"
+
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 type OrchestratorPinger struct {
+	id               uint64
+	client           orchestrator.OrchestratorClient
 	host             string
+	executors        int
 	orchestratorHost string
 	requestJSON      []byte
 }
 
-func NewOrchestratorPinger(id int, host string, executors int, orchestratorHost string) (*OrchestratorPinger, error) {
-	requestBody := &dto.OrchestratorPingDTO{
-		Id:        id,
-		Url:       host,
-		Executors: executors,
-	}
+func NewOrchestratorPinger(
+	ctx context.Context,
+	id uint64,
+	host string,
+	gRPCHost string,
+	executors int,
+) (*OrchestratorPinger, error) {
+	cc, err := grpc.DialContext(
+		ctx,
+		gRPCHost,
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+	)
 
-	requestJSON, err := json.Marshal(requestBody)
 	if err != nil {
 		return nil, err
 	}
 
 	pinger := &OrchestratorPinger{
-		host:             host,
-		orchestratorHost: orchestratorHost,
-		requestJSON:      requestJSON,
+		client:    orchestrator.NewOrchestratorClient(cc),
+		id:        id,
+		executors: executors,
+		host:      host,
 	}
 
 	time.AfterFunc(2*time.Second, func() {
-		err := pinger.SendPing()
+		err := pinger.SendPing(ctx)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -44,7 +55,10 @@ func NewOrchestratorPinger(id int, host string, executors int, orchestratorHost 
 	return pinger, err
 }
 
-func (d *OrchestratorPinger) MustPingOrchestrator(period time.Duration) {
+func (d *OrchestratorPinger) MustPingOrchestrator(
+	ctx context.Context,
+	period time.Duration,
+) {
 	ticker := time.NewTicker(period)
 
 	go func() {
@@ -53,7 +67,7 @@ func (d *OrchestratorPinger) MustPingOrchestrator(period time.Duration) {
 		for {
 			select {
 			case <-ticker.C:
-				err := d.SendPing()
+				err := d.SendPing(ctx)
 				if err != nil {
 					log.Fatalf("orchestrator ping error: %s", err.Error())
 				}
@@ -62,24 +76,19 @@ func (d *OrchestratorPinger) MustPingOrchestrator(period time.Duration) {
 	}()
 }
 
-func (d *OrchestratorPinger) SendPing() error {
-	client := http.Client{
-		Timeout: 5 * time.Second,
-	}
+func (d *OrchestratorPinger) SendPing(ctx context.Context) error {
+	resp, err := d.client.RegisterWorker(ctx, &orchestrator.WorkerRegisterRequest{
+		Id:        d.id,
+		Url:       d.host,
+		Executors: uint32(d.executors),
+	})
 
-	req, err := http.NewRequest(http.MethodPost, d.orchestratorHost+"/api/worker", bytes.NewBuffer(d.requestJSON))
-	req.Header.Set("Content-Type", "application/json")
 	if err != nil {
-		return err
+		return fmt.Errorf("grpc client error: %w", err)
 	}
 
-	resp, err := client.Do(req)
-	if err != nil {
-		return err
-	}
-
-	if resp.StatusCode >= 400 {
-		return errors.New("orchestrator ping failed with status " + resp.Status)
+	if !resp.Ok {
+		return fmt.Errorf("grpc client error: response is not ok")
 	}
 
 	return nil

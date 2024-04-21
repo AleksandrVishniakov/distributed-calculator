@@ -4,8 +4,7 @@ WORKDIR /go/src/distributed-calculator/daemon
 
 COPY app ./app/
 
-# COPY go.mod go.sum ./
-COPY go.mod ./
+COPY go.mod go.sum ./
 
 RUN go mod download
 
