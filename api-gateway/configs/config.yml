@@ -1,6 +1,6 @@
 db:
   host: "postgres"
-  port: 5432
+  port: 5502
   username: "postgres"
   db-name: "distributed-calculator-db"
   ssl-mode: "disable"

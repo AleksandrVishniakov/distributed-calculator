@@ -36,7 +36,10 @@ services:
     image: postgres:14-alpine
     container_name: distributed-calculator-psql
     ports:
-      - "5002:5432"
+      - "5502:5502"
+    expose:
+      - "5502"
+    command: -p 5502
     environment:
       - POSTGRES_DB=distributed-calculator-db
       - POSTGRES_USER=postgres
@@ -44,9 +47,9 @@ services:
     volumes:
       - ./data:/var/lib/postgresql/data
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
-      interval: 3s
-      timeout: 15s
+      test: [ "CMD-SHELL", "pg_isready -U postgres -p 5502" ]
+      interval: 5s
+      timeout: 10s
       retries: 5
 
   goose:
@@ -58,7 +61,7 @@ services:
       - ./api-gateway/db/migrations:/db/migrations
     environment:
       GOOSE_DRIVER: postgres
-      GOOSE_DBSTRING: "postgres://postgres:${DB_PASSWORD}@postgres:5432/distributed-calculator-db?sslmode=disable"
+      GOOSE_DBSTRING: "postgres://postgres:${DB_PASSWORD}@postgres:5502/distributed-calculator-db?sslmode=disable"
     command: ["-dir", "/db/migrations", "up"]
 
   pg-auth:
