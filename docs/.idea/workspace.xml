@@ -1,40 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="AutoImportSettings">
-    <option name="autoReloadType" value="SELECTIVE" />
-  </component>
   <component name="ChangeListManager">
-    <list default="true" id="952c2938-7398-4fa9-a778-45e0fecb3c12" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../auth/Dockerfile" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../auth/Makefile" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../auth/app/cmd/app/main.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../auth/app/internal/app/app.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../auth/app/internal/app/grpcapp/app.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../auth/app/internal/domain/models/user.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../auth/app/internal/repositories/postgres/postgres.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../auth/app/internal/repositories/usersrepo/repository.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../auth/app/internal/servers/grpcsrv/mocks/Auth.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../auth/app/internal/servers/grpcsrv/server.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../auth/app/internal/servers/grpcsrv/server_test.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../auth/app/internal/services/auth/auth.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../auth/app/internal/services/auth/auth_test.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../auth/app/internal/services/auth/mocks/TokenParser.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../auth/app/internal/services/auth/mocks/UserProvider.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../auth/app/internal/services/auth/mocks/UserSaver.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../auth/app/internal/services/userscache/cache.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../auth/app/pkg/e/wrappers.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../auth/app/pkg/fake/fake.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../auth/app/pkg/jwt/jwt.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../auth/app/pkg/sl/discard.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../auth/app/pkg/sl/sl.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../auth/app/utils/configs/config.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../auth/configs/local.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../auth/configs/prod.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../auth/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.env" beforeDir="false" afterPath="$PROJECT_DIR$/../.env" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/../Makefile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="214b098b-470f-4233-b44e-ae9ac3db8662" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/HelpTOC.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Map.jhm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Writerside/topics/How-to-start.md" beforeDir="false" afterPath="$PROJECT_DIR$/Writerside/topics/How-to-start.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api-docs.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/config.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/current.help.version" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/database-structure.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/expression-parse.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/how-to-start.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/icon-192.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/icon-512.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/distributed-calculator database design.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project-overview.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sequence-diagram.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/site.webmanifest" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/statuses.html" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,45 +66,27 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: 0
-}</component>
-  <component name="ProjectId" id="2cGfIQI38cVjYapHA6r6T1gcp7E" />
-  <component name="ProjectLevelVcsManager">
-    <ConfirmationsSetting value="1" id="Add" />
-  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "customColor": "",
+  "associatedIndex": 0
+}]]></component>
+  <component name="ProjectId" id="2fSZ0r9gOOL0LUsGZsqKB1uMWnP" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;Writerside.Web Archive (hi).executor&quot;: &quot;Run&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/AV/go/src/distributed-calculator/docs/Writerside/topics&quot;
-  },
-  &quot;keyToStringList&quot;: {
-    &quot;stardust.markdown.MarkdownSplitEditorSuppressor:keyList&quot;: [
-      &quot;C:/Users/AV/go/src/distributed-calculator/docs/Writerside/topics/Api-docs.md&quot;,
-      &quot;C:/Users/AV/go/src/distributed-calculator/docs/Writerside/topics/How-to-start.md&quot;,
-      &quot;C:/Users/AV/go/src/distributed-calculator/docs/Writerside/topics/Sequence-diagram.md&quot;
-    ]
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "Writerside.Web Archive (hi).executor": "Run",
+    "git-widget-placeholder": "main"
   }
-}</component>
-  <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\AV\go\src\distributed-calculator\docs\Writerside\topics" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\AV\go\src\distributed-calculator\docs\Writerside\images" />
-    </key>
-  </component>
+}]]></component>
   <component name="RunManager">
     <configuration name="Web Archive (hi)" type="StardustRunConfiguration" factoryName="save-as-zip">
       <option name="folderPath" value="$PROJECT_DIR$" />
       <option name="instanceId" value="hi" />
-      <option name="instanceName" value="Help Instance" />
+      <option name="instanceName" value="Распределённый калькулятор" />
       <method v="2" />
     </configuration>
   </component>
